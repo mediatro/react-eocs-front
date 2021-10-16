@@ -21,6 +21,9 @@ export const AvailableCurrencies = {
 };
 
 const config = {
+    'api.payment.path': 'payments',
+    'api.payment_request.path': 'payment_requests',
+    'api.invoice_request.path': 'invoice_requests',
     'api.payment_details.path': {
         [PaymentType.WIRE_TRANSFER]: 'payment_wire_details',
         [PaymentType.PSP]: 'payment_p_s_p_details',
@@ -40,10 +43,43 @@ export class PaymentManager extends ApiService {
         return this._fetch(this.config['api.payment_details.path'][details.method], 'POST', JSON.stringify(details));
     }
 
+    doPostPaymentRequest(request){
+        return this._fetch(this.config['api.payment_request.path'], 'POST', JSON.stringify(request));
+    }
+
+    doGetPayments(erpId){
+        return this._fetch(`${this.config['api.payment.path']}?detail.user.erpId=${erpId}`, 'GET');
+    }
+
+    doPostInvoiceRequest(request){
+        return this._fetch(this.config['api.invoice_request.path'], 'POST', JSON.stringify(request));
+    }
+
     getCreatePaymentDetailsQuery(details){
         return this.getObserver({
             queryKey: ['post_payment_details', details],
             queryFn: () => this.doPostPaymentDetails(details)
+        });
+    }
+
+    getCreatePaymentRequestQuery(request){
+        return this.getObserver({
+            queryKey: ['post_payment_request', request],
+            queryFn: () => this.doPostPaymentRequest(request)
+        });
+    }
+
+    getPaymentsQuery(erpId){
+        return this.getObserver({
+            queryKey: ['get_payments', erpId],
+            queryFn: () => this.doGetPayments(erpId)
+        });
+    }
+
+    getCreateInvoiceRequestQuery(request){
+        return this.getObserver({
+            queryKey: ['post_invoice_request', request],
+            queryFn: () => this.doPostInvoiceRequest(request)
         });
     }
 

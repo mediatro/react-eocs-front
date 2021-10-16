@@ -18,7 +18,6 @@ export function PaymentDetailsPage(){
     const intl = useIntl();
     const authc = useContext(AuthContext);
     const pmc = useContext(PaymentManagerContext);
-    const countries = useMemo(() => countryList().getData(), []);
 
     const [paymentType, setPaymentType] = useState(PaymentType.WIRE_TRANSFER);
 

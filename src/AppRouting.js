@@ -13,6 +13,7 @@ import {AuthContext} from "./shared/services/AuthProvider";
 import {PaymentDetailsPage} from "./eocs/payments/components/PaymentDetailsPage";
 import {LogoutPage} from "./eocs/auth/components/LogoutPage";
 import {UserManagerProvider} from "./eocs/auth/services/UserManagerProvider";
+import {PaymentRequestPage} from "./eocs/payments/components/PaymentRequestPage";
 
 export const routes = [
     {
@@ -24,6 +25,7 @@ export const routes = [
     {
         path: '/payment-request',
         message: 'page.payment_request',
+        component: PaymentRequestPage,
         conditions: {authed: true, verified: true},
     },
     {

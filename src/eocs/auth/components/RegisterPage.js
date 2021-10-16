@@ -47,7 +47,7 @@ export function RegisterPage(props){
                 setUser(v.data);
             });
         }else{
-            let nv = {...user, ...camelize(formValue)};
+            let nv = {...camelize(formValue), erpId: user.erpId};
             umc.manager.getRegisterQuery(nv).subscribe((v) => {
                 authc.manager.setUser(v);
             });
@@ -175,12 +175,13 @@ export function RegisterPage(props){
                     </form>
                 )}
             />
-
-            <AgreeDialog title={'title.consent_personal_data'}
-                         body={'text.consent_personal_data'}
-                         open={open === DialogTypes.OFFER}
-                         handleClose={handleAgreeDialogClose(DialogTypes.OFFER)}
-            />
+            {user &&
+                <AgreeDialog title={user.currentOffer.title}
+                             body={user.currentOffer.body}
+                             open={open === DialogTypes.OFFER}
+                             handleClose={handleAgreeDialogClose(DialogTypes.OFFER)}
+                />
+            }
 
             <AgreeDialog title={'title.consent_confidentiality'}
                          body={'text.consent_confidentiality'}
