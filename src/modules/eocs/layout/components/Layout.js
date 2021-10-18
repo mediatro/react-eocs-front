@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import {LangSwitch} from "./LangSwitch";
 import {SideNav} from "./SideNav";
-import {AppRouting} from "../../../AppRouting";
+import {AppRouting} from "../../../../services/AppRouting";
 
 export function Layout(props){
 
@@ -23,14 +23,15 @@ export function Layout(props){
         <CssBaseline />
         <Container>
             <AppBar position="fixed"
-                    sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+                    sx={{
+                        width: `calc(100% - ${drawerWidth}px)`,
+                        ml: `${drawerWidth}px`
+                    }}
             >
                 <Toolbar>
                     <Grid container>
                         <Grid item xs={3}>
-                            <Typography variant="h6" noWrap component="div">
-                                EOCS
-                            </Typography>
+                            <Typography variant="h6" noWrap component="div">EOCS</Typography>
                         </Grid>
 
                         <Grid item>
@@ -60,12 +61,14 @@ export function Layout(props){
             </Drawer>
 
             <Box component="main"
-                 sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
+                 sx={{
+                     flexGrow: 1,
+                     bgcolor: 'background.default',
+                     p: 3
+                 }}
             >
-
                 <Toolbar />
                 <AppRouting/>
-
             </Box>
         </Container>
     </>);

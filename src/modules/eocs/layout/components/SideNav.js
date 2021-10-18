@@ -3,11 +3,13 @@ import {useContext, useEffect} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {Link, useLocation} from "react-router-dom";
 import {FormattedMessage} from "react-intl";
-import {routes} from "../../../AppRouting";
+import {routes} from "../../../../services/AppRouting";
+import {UserManagerContext} from "../../auth/services/UserManagerProvider";
 
 export function SideNav(props){
 
     const authc = useContext(AuthContext);
+    const umc = useContext(UserManagerContext);
     const location = useLocation();
 
     const isActive = (routeName) => {
@@ -21,11 +23,11 @@ export function SideNav(props){
 
         if(route.conditions.authed === true){
             if(route.conditions.verified === true) {
-                return authc.manager.isVerified();
+                return umc.manager.isUserVerified();
             }
-            return authc.manager.getUser();
+            return authc.manager.checkAuth();
         }else if(route.conditions.authed === false){
-            return !authc.manager.getUser();
+            return !authc.manager.checkAuth();
         }
     }
 

@@ -5,15 +5,16 @@ import {
     Route,
     Link, useHistory
 } from "react-router-dom";
-import {HomePage} from "./eocs/home/components/HomePage";
-import {LoginPage} from "./eocs/auth/components/LoginPage";
-import {RegisterPage} from "./eocs/auth/components/RegisterPage";
+import {HomePage} from "../modules/eocs/home/components/HomePage";
+import {LoginPage} from "../modules/eocs/auth/components/LoginPage";
+import {RegisterPage} from "../modules/eocs/auth/components/RegisterPage";
 import {GuardedRoute, GuardProvider} from "react-router-guards";
-import {AuthContext} from "./shared/services/AuthProvider";
-import {PaymentDetailsPage} from "./eocs/payments/components/PaymentDetailsPage";
-import {LogoutPage} from "./eocs/auth/components/LogoutPage";
-import {UserManagerProvider} from "./eocs/auth/services/UserManagerProvider";
-import {PaymentRequestPage} from "./eocs/payments/components/PaymentRequestPage";
+import {AuthContext} from "../modules/shared/services/AuthProvider";
+import {PaymentDetailsPage} from "../modules/eocs/payments/components/PaymentDetailsPage";
+import {LogoutPage} from "../modules/eocs/auth/components/LogoutPage";
+import {UserManagerProvider} from "../modules/eocs/auth/services/UserManagerProvider";
+import {PaymentRequestPage} from "../modules/eocs/payments/components/PaymentRequestPage";
+import {mergeWith} from "rxjs";
 
 export const routes = [
     {
@@ -60,12 +61,12 @@ export function AppRouting(props){
     const authc = useContext(AuthContext);
     const history = useHistory();
 
-    authc.manager.userChanged$.subscribe(v => history.push('/'));
+    authc.manager.userChanged$.pipe(mergeWith(authc.manager.loginRequested$)).subscribe(v => history.push('/'));
 
     const appGuard = (to, from, next) => {
 
         if (to.meta?.authed === true) {
-            if (authc.manager.getUser()) {
+            if (authc.manager.checkAuth()) {
                 if (to.meta?.verified === true) {
                     if (true) {
                         next();

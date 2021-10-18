@@ -1,14 +1,14 @@
 import logo from './logo.svg';
 import './App.css';
-import {Layout} from "./eocs/layout/components/Layout";
-import {AppRouting} from "./AppRouting";
+import {Layout} from "./modules/eocs/layout/components/Layout";
+import {AppRouting} from "./services/AppRouting";
 import {createContext, useContext, useEffect} from "react";
-import {I18NProvider} from "./shared/services/I18NProvider";
-import {AuthProvider} from "./shared/services/AuthProvider";
+import {I18NProvider} from "./modules/shared/services/I18NProvider";
+import {AuthProvider} from "./modules/shared/services/AuthProvider";
 import {BrowserRouter} from "react-router-dom";
 import {QueryClient, QueryClientProvider} from "react-query";
-import {UserManagerProvider} from "./eocs/auth/services/UserManagerProvider";
-import {PaymentManagerProvider} from "./eocs/payments/services/PaymentProvier";
+import {UserManagerProvider} from "./modules/eocs/auth/services/UserManagerProvider";
+import {PaymentManagerProvider} from "./modules/eocs/payments/services/PaymentProvier";
 
 const queryClient = new QueryClient({defaultOptions: {
     queries: {
@@ -41,15 +41,15 @@ function App() {
     return (
             <I18NProvider translations={translations}>
                 <QueryClientProvider client={queryClient}>
-                    <UserManagerProvider>
-                        <PaymentManagerProvider>
-                            <AuthProvider>
-                                <BrowserRouter>
-                                            <Layout/>
-                                </BrowserRouter>
-                            </AuthProvider>
-                        </PaymentManagerProvider>
-                    </UserManagerProvider>
+                    <BrowserRouter>
+                        <AuthProvider>
+                            <UserManagerProvider>
+                                <PaymentManagerProvider>
+                                        <Layout/>
+                                </PaymentManagerProvider>
+                            </UserManagerProvider>
+                        </AuthProvider>
+                    </BrowserRouter>
                 </QueryClientProvider>
             </I18NProvider>
 

@@ -29,7 +29,7 @@ export function PaymentRequestPage(){
     return (
         <Box sx={{width: 300}}>
             <Typography>field.payment_detail.limit :</Typography>
-            <Typography>{getActivePaymentDetail().payLimit}</Typography>
+            <Typography>{getActivePaymentDetail() ? getActivePaymentDetail().payLimit : '-'}</Typography>
 
             <Form
                 onSubmit={onSubmit}

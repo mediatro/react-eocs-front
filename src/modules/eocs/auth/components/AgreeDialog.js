@@ -1,7 +1,10 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {useState} from "react";
+import {useIntl} from "react-intl";
 
 export function AgreeDialog(props){
+
+    const intl = useIntl();
 
     return (
         <Dialog open={props.open}
@@ -16,8 +19,8 @@ export function AgreeDialog(props){
             </DialogContent>
 
             <DialogActions>
-                <Button onClick={() => props.handleClose(false)}>action.agree_dialog.disagree</Button>
-                <Button onClick={() => props.handleClose(true)} autoFocus>action.agree_dialog.agree</Button>
+                <Button onClick={() => props.handleClose(false)}>{intl.formatMessage({id: 'action.agree_dialog.disagree'})}</Button>
+                <Button onClick={() => props.handleClose(true)} autoFocus>{intl.formatMessage({id: 'action.agree_dialog.agree'})}</Button>
             </DialogActions>
         </Dialog>
     );

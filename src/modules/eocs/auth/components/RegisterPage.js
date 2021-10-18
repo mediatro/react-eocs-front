@@ -4,7 +4,7 @@ import {Field, Form} from "react-final-form";
 import MuiPhoneNumber from 'material-ui-phone-number';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
-import {useIntl} from "react-intl";
+import {FormattedMessage, useIntl} from "react-intl";
 import {CountrySelect} from "../../../shared/components/CountrySelect";
 import {useContext, useState} from "react";
 import {AgreeDialog} from "./AgreeDialog";
@@ -54,8 +54,6 @@ export function RegisterPage(props){
         }
     };
 
-    console.log(checked);
-
     return (
         <Box sx={{width: 300}}>
             <Form
@@ -63,7 +61,7 @@ export function RegisterPage(props){
                 render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
                         {!user ? <>
-                            <Typography>text.register.request_prereg</Typography>
+                            <Typography><FormattedMessage id={'text.register.request_prereg'}/></Typography>
 
                             <TextField name="erp_id"
                                        label={intl.formatMessage( {id: "field.user.erp_id"})}
@@ -72,13 +70,13 @@ export function RegisterPage(props){
                                        onChange={(e) => setErpId(e.target.value)}
                             />
 
-                            <Button type="submit">action.register.check_prereg</Button>
+                            <Button type="submit"><FormattedMessage id={'action.register.check_prereg'}/></Button>
 
                         </> : <>
 
                             <TextField  type={'email'}
                                         name="email"
-                                        label={"field.user.email"}
+                                        label={intl.formatMessage( {id: "field.user.email"})}
                                         required={true}
                                         value={user.email}
                             />
@@ -86,7 +84,7 @@ export function RegisterPage(props){
                             <Field name="phone">
                                 { props => <MuiPhoneNumber defaultCountry={'us'}
                                                            name="phone"
-                                                           label={"field.user.phone"}
+                                                           label={intl.formatMessage( {id: "field.user.phone"})}
                                                            required={true}
                                 /> }
                             </Field>
@@ -98,12 +96,12 @@ export function RegisterPage(props){
                             />
                             <TextField type={"password"}
                                        name="password_repeat"
-                                       label={"field.user.password_repeat"}
+                                       label={intl.formatMessage( {id: "field.user.password_repeat"})}
                                        required={true}
                             />
 
                             <Select name="user_type"
-                                    label={"field.user.user_type"}
+                                    label={intl.formatMessage( {id: "field.user.user_type"})}
                                     required={true}
                                     data={Object.keys(UserTypes).map(k => ({
                                         label: intl.formatMessage({id: `field.user.user_type.${UserTypes[k]}`}),
@@ -113,16 +111,16 @@ export function RegisterPage(props){
 
 
                             <TextField name="first_name"
-                                       label={"field.user.first_name"}
+                                       label={intl.formatMessage( {id: "field.user.first_name"})}
                                        required={true}
                             />
                             <TextField name="last_name"
-                                       label={"field.user.last_name"}
+                                       label={intl.formatMessage( {id: "field.user.last_name"})}
                                        required={true}
                             />
 
                             <KeyboardDatePicker name="birthday"
-                                                label="field.user.birthday"
+                                                label={intl.formatMessage( {id: "field.user.birthday"})}
                                                 required={true}
                                                 openTo={"year"}
                                                 format={"dd.MM.yyyy"}
@@ -130,15 +128,15 @@ export function RegisterPage(props){
                             />
 
                             <CountrySelect name="country"
-                                    label={"field.user.country"}
+                                    label={intl.formatMessage( {id: "field.location.country"})}
                                     required={true}
                             />
                             <TextField name="city"
-                                       label={"field.user.city"}
+                                       label={intl.formatMessage( {id: "field.location.city"})}
                                        required={true}
                             />
                             <TextField name="address"
-                                       label={"field.user.address"}
+                                       label={intl.formatMessage( {id: "field.location.address"})}
                                        required={true}
                             />
 
@@ -150,27 +148,29 @@ export function RegisterPage(props){
                                         data={{}}
                             />
 
-                            <Button onClick={() => handleAgreeDialogOpen(DialogTypes.CONFIDENTIALITY)}>action.register.consent_confidentiality.open</Button>
+                            <Button onClick={() => handleAgreeDialogOpen(DialogTypes.CONFIDENTIALITY)}>{intl.formatMessage( {id: "action.register.consent_confidentiality.open"})}</Button>
+
                             <Checkboxes name="consent_confidentiality"
                                         required={true}
                                         data={{
-                                            label: "form.register.consent_confidentiality",
+                                            label: intl.formatMessage( {id: "form.register.consent_confidentiality"}),
                                             value: checked[DialogTypes.CONFIDENTIALITY]
                                         }}
                                         checked={checked[DialogTypes.CONFIDENTIALITY] === true}
                             />
 
-                            <Button onClick={() => handleAgreeDialogOpen(DialogTypes.OFFER)}>action.register.consent_offer.open</Button>
+                            <Button onClick={() => handleAgreeDialogOpen(DialogTypes.OFFER)}>{intl.formatMessage( {id: "action.register.consent_offer.open"})}</Button>
+
                             <Checkboxes name="consent_offer"
                                         required={true}
                                         data={{
-                                            label: "form.register.consent_offer",
+                                            label: intl.formatMessage( {id: "form.register.consent_offer"}),
                                             value: checked[DialogTypes.OFFER]
                                         }}
                                         checked={checked[DialogTypes.OFFER] === true}
                             />
 
-                            <Button type="submit" variant="contained">action.register.submit</Button>
+                            <Button type="submit" variant="contained"><FormattedMessage id={'action.register.submit'}/></Button>
                         </>}
                     </form>
                 )}
@@ -183,8 +183,8 @@ export function RegisterPage(props){
                 />
             }
 
-            <AgreeDialog title={'title.consent_confidentiality'}
-                         body={'text.consent_confidentiality'}
+            <AgreeDialog title={intl.formatMessage( {id: "title.consent_confidentiality"})}
+                         body={intl.formatMessage( {id: "text.consent_confidentiality"})}
                          open={open === DialogTypes.CONFIDENTIALITY}
                          handleClose={handleAgreeDialogClose(DialogTypes.CONFIDENTIALITY)}
             />

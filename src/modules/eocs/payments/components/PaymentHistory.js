@@ -40,15 +40,15 @@ export function PaymentHistory(){
                     <TableRow>
                         <TableCell>field.payment.date</TableCell>
                         <TableCell align="right">field.payment.amount</TableCell>
-                        <TableCell align="right">field.payment_details.currency</TableCell>
-                        <TableCell align="right">field.payment_details.method</TableCell>
+                        <TableCell align="right">field.payment.currency</TableCell>
+                        <TableCell align="right">field.payment.method</TableCell>
                         <TableCell align="right">action.payment.invoice_request</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {paymentHistory.map((row) => (
                         <TableRow>
-                            <TableCell component="th" scope="row">date</TableCell>
+                            <TableCell component="th" scope="row">{new Date(row.updatedAt).toLocaleDateString()}</TableCell>
                             <TableCell align="right">{row.amount}</TableCell>
                             <TableCell align="right">{row.detail.currency}</TableCell>
                             <TableCell align="right">{row.detail.method}</TableCell>

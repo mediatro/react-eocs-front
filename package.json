@@ -19,6 +19,7 @@
     "camelize": "^1.0.0",
     "date-fns": "^2.25.0",
     "final-form": "^4.20.4",
+    "jwt-decode": "^3.1.2",
     "material-ui-phone-number": "^2.2.6",
     "mui-rff": "^3.0.16",
     "react": "^17.0.2",
@@ -38,7 +39,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "extract": "formatjs extract"
   },
   "eslintConfig": {
     "extends": [
@@ -57,5 +59,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@formatjs/cli": "^4.3.2"
   }
 }

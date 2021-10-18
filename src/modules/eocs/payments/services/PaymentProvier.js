@@ -2,6 +2,7 @@ import {ApiService} from "../../../shared/services/ApiService";
 import {useQueryClient} from "react-query";
 import {UserManager, UserManagerContext} from "../../auth/services/UserManagerProvider";
 import {createContext, useContext} from "react";
+import {AuthContext} from "../../../shared/services/AuthProvider";
 
 export const PaymentType = {
     WIRE_TRANSFER: 'wire_transfer',
@@ -56,28 +57,28 @@ export class PaymentManager extends ApiService {
     }
 
     getCreatePaymentDetailsQuery(details){
-        return this.getObserver({
+        return this.getObserver$({
             queryKey: ['post_payment_details', details],
             queryFn: () => this.doPostPaymentDetails(details)
         });
     }
 
     getCreatePaymentRequestQuery(request){
-        return this.getObserver({
+        return this.getObserver$({
             queryKey: ['post_payment_request', request],
             queryFn: () => this.doPostPaymentRequest(request)
         });
     }
 
     getPaymentsQuery(erpId){
-        return this.getObserver({
+        return this.getObserver$({
             queryKey: ['get_payments', erpId],
             queryFn: () => this.doGetPayments(erpId)
         });
     }
 
     getCreateInvoiceRequestQuery(request){
-        return this.getObserver({
+        return this.getObserver$({
             queryKey: ['post_invoice_request', request],
             queryFn: () => this.doPostInvoiceRequest(request)
         });
@@ -93,8 +94,10 @@ const manager = new PaymentManager();
 export function PaymentManagerProvider(props){
 
     const queryClient = useQueryClient();
+    const authc = useContext(AuthContext);
 
-    manager.qc = queryClient;
+    manager.queryClient = queryClient;
+    manager.authContext = authc;
 
     return (
         <PaymentManagerContext.Provider value={{manager: manager}}>

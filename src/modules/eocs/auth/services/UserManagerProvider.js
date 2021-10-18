@@ -24,7 +24,7 @@ export class UserManager extends ApiService {
     }
 
     doPutRegister(user){
-        return this._fetch([this.config['api.users.path'], user.erpId].join('/'), 'PUT', JSON.stringify(user))
+        return this._fetch([this.config['api.users.path'], user.erpId].join('/'), 'PATCH', JSON.stringify(user))
     }
 
     doGetUser(username){
@@ -32,24 +32,28 @@ export class UserManager extends ApiService {
     }
 
     getPreRegisterQuery(erpId){
-        return this.getObserver({
+        return this.getObserver$({
             queryKey: ['get_preregister', erpId],
             queryFn: () => this.doGetPreRegister(erpId)
         });
     }
 
     getRegisterQuery(user){
-        return this.getObserver({
+        return this.getObserver$({
             queryKey: ['put_register', user],
             queryFn: () => this.doPutRegister(user)
         });
     }
 
     getUserQuery(username){
-        return this.getObserver({
+        return this.getObserver$({
             queryKey: ['get_user', username],
             queryFn: () => this.doGetUser(username)
         });
+    }
+
+    isUserVerified() {
+        return this.authContext.manager.getUser()?.status === 'new';
     }
 
 }
@@ -61,8 +65,20 @@ const manager = new UserManager();
 export function UserManagerProvider(props){
 
     const queryClient = useQueryClient();
+    const authc = useContext(AuthContext);
 
-    manager.qc = queryClient;
+    manager.queryClient = queryClient;
+    manager.authContext = authc;
+
+    authc.manager.userChanged$.subscribe((user) =>{
+       if(user && user.username && !user.erpId){
+           manager.getUserQuery(user.username).subscribe((v) => {
+               if(v.data && v.data['hydra:totalItems'] > 0){
+                   authc.manager.setUser(v.data['hydra:member'][0]);
+               }
+           })
+       }
+    });
 
     return (
         <UserManagerContext.Provider value={{manager: manager}}>
