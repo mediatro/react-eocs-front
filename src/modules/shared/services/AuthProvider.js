@@ -1,6 +1,7 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {Subject} from "rxjs";
 import jwtDecode from "jwt-decode";
+import {API_HOST} from "../../../config/config";
 
 export class AuthManager {
 
@@ -9,7 +10,7 @@ export class AuthManager {
     loginRequested$ = new Subject();
 
     config = {
-        'api.url': 'https://localhost',
+        'api.url': API_HOST,
     };
 
     getUser(){

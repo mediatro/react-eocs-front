@@ -1,5 +1,6 @@
 import {from, map, mergeMap, Subject, switchMap} from "rxjs";
 import {QueryObserver} from "react-query";
+import {API_HOST} from "../../../config/config";
 
 export class ApiService {
 
@@ -7,7 +8,7 @@ export class ApiService {
     authContext = null;
 
     config = {
-        'api.url': 'https://localhost',
+        'api.url': API_HOST,
     };
 
     _getUrl(url){
