@@ -43,14 +43,12 @@ export class AuthManager {
             })
             .then(({ token }) => {
                 localStorage.setItem("token", token);
-                localStorage.setItem("username", username);
-                this.setUser({username: username});
+                this.checkAuth();
             });
     }
 
     logout(){
         localStorage.removeItem("token");
-        localStorage.removeItem("username");
         this.setUser(null);
     }
 
@@ -62,9 +60,9 @@ export class AuthManager {
                 return false;
             }
 
-            let savedUser = localStorage.getItem("username");
+            let savedUser = jwtDecode(token)?.erpId;
             if(!this.getUser() && savedUser){
-                this.setUser({username: savedUser});
+                this.setUser({erpId: savedUser});
             }
             return true;
 

@@ -45,18 +45,18 @@ export function PaymentDetailsPage(){
                     <form onSubmit={handleSubmit}>
 
                         <Select name="method"
-                                label={"field.payment.method"}
+                                label={intl.formatMessage({id: "payment.field.method"})}
                                 required={true}
                                 value={paymentType}
                                 onChange={(e)=> {setPaymentType(e.target.value)}}
                                 data={Object.keys(PaymentType).map(k => ({
-                                    label: intl.formatMessage({id: `field.payment.method.${PaymentType[k]}`}),
+                                    label: intl.formatMessage({id: `payment.field.method.${PaymentType[k]}`}),
                                     value: PaymentType[k]
                                 }))}
                         />
 
                         <Select name="currency"
-                                label={"field.payment.currency"}
+                                label={intl.formatMessage({id: "payment.field.currency"})}
                                 required={true}
                                 data={AvailableCurrencies[getCurrencyType()].map(v => ({
                                     label: v,
@@ -64,10 +64,9 @@ export function PaymentDetailsPage(){
                                 }))}
                         />
 
-
                         {paymentType === PaymentType.WIRE_TRANSFER && <>
                             <TextField name="account_holder_name"
-                                       label="field.payment.wire.account_holder_name"
+                                       label={intl.formatMessage({id: "payment.field.wire.account_holder_name"})}
                                        required={true}
                             />
                             <CountrySelect name="country"
@@ -76,62 +75,66 @@ export function PaymentDetailsPage(){
                             />
 
                             <TextField name="beneficiary_bank_name"
-                                       label="field.payment.wire.beneficiary_bank_name"
+                                       label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_name"})}
                                        required={true}
                             />
                             <TextField name="beneficiary_bank_address"
-                                       label="field.payment.wire.beneficiary_bank_address"
+                                       label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_address"})}
                                        required={true}
                             />
                             <TextField name="beneficiary_bank_account_iban"
-                                       label="field.payment.wire.beneficiary_bank_account_iban"
+                                       label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_account_iban"})}
                                        required={true}
                             />
                             <TextField name="beneficiary_bank_swift"
-                                       label="field.payment.wire.beneficiary_bank_swift"
+                                       label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_swift"})}
                                        required={true}
                             />
 
                         </>}
 
                         {paymentType === PaymentType.PSP && <>
+                            <TextField name="platform"
+                                       label={intl.formatMessage({id: "payment.field.psp.platform"})}
+                                       required={true}
+                            />
                             <TextField name="account_holder_name"
-                                       label="field.payment.psp.account_holder_name"
+                                       label={intl.formatMessage({id: "payment.field.psp.account_holder_name"})}
                                        required={true}
                             />
                             <TextField name="wallet_number_email"
-                                       label="field.payment.psp.wallet_number_email"
+                                       label={intl.formatMessage({id: "payment.field.psp.wallet_number_email"})}
                                        required={true}
                             />
                         </>}
 
                         {paymentType === PaymentType.OCT && <>
                             <TextField name="card_holder_name"
-                                       label="field.payment.oct.card_holder_name"
+                                       label={intl.formatMessage({id: "payment.field.oct.card_holder_name"})}
                                        required={true}
                             />
                             <TextField name="card_number"
-                                       label="field.payment.oct.card_number"
+                                       label={intl.formatMessage({id: "payment.field.oct.card_number"})}
                                        required={true}
                             />
                             <TextField name="card_expiry"
-                                       label="field.payment.oct.card_expiry"
+                                       label={intl.formatMessage({id: "payment.field.oct.card_expiry"})}
                                        required={true}
                             />
                         </>}
 
                         {paymentType === PaymentType.CRYPTO && <>
                             <TextField name="platform"
-                                       label="field.payment.crypto.platform"
+                                       label={intl.formatMessage({id: "payment.field.crypto.platform"})}
                                        required={true}
                             />
                             <TextField name="wallet_number"
-                                       label="field.payment.crypto.wallet_number"
+                                       label={intl.formatMessage({id: "payment.field.crypto.wallet_number"})}
                                        required={true}
                             />
                         </>}
 
-                        <Button type="submit" variant="contained">action.payment.create_details</Button>
+                        <Button type="submit" variant="contained"><FormattedMessage id={'payment.action.details_create'}/></Button>
                     </form>
                 )}
             />

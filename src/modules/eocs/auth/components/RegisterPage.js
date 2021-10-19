@@ -7,8 +7,8 @@ import DateFnsUtils from '@date-io/date-fns';
 import {FormattedMessage, useIntl} from "react-intl";
 import {CountrySelect} from "../../../shared/components/CountrySelect";
 import {useContext, useState} from "react";
-import {AgreeDialog} from "./AgreeDialog";
-import {UserManagerContext, UserManagerProvider, UserTypes} from "../services/UserManagerProvider";
+import {AgreeDialog} from "../../../shared/components/AgreeDialog";
+import {UserManagerContext, UserManagerProvider, UserType} from "../services/UserManagerProvider";
 import camelize from 'camelize';
 import {AuthContext} from "../../../shared/services/AuthProvider";
 
@@ -23,10 +23,13 @@ export function RegisterPage(props){
     const umc = useContext(UserManagerContext);
     const authc = useContext(AuthContext);
 
-    const [open, setOpen] = useState(false);
     const [erpId, setErpId] = useState(null);
-    const [checked, setChecked] = useState({});
     const [user, setUser] = useState(null);
+    const [userType, setUserType] = useState(UserType.PRIVATE_INDIVIDUAL);
+
+    const [open, setOpen] = useState(false);
+    const [checked, setChecked] = useState({});
+
 
     const handleAgreeDialogOpen = (v) => {
         setOpen(v);
@@ -47,9 +50,14 @@ export function RegisterPage(props){
                 setUser(v.data);
             });
         }else{
-            let nv = {...camelize(formValue), erpId: user.erpId};
+            let nv = {...camelize(formValue),
+                erpId: user.erpId,
+                email: user.email,
+                phone: user.phone,
+                userType: userType,
+            };
             umc.manager.getRegisterQuery(nv).subscribe((v) => {
-                authc.manager.setUser(v);
+                authc.manager.login(nv.email, nv.password);
             });
         }
     };
@@ -61,130 +69,144 @@ export function RegisterPage(props){
                 render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
                         {!user ? <>
-                            <Typography><FormattedMessage id={'text.register.request_prereg'}/></Typography>
+                            <Typography><FormattedMessage id={'auth.text.register.request_prereg'}/></Typography>
 
                             <TextField name="erp_id"
-                                       label={intl.formatMessage( {id: "field.user.erp_id"})}
+                                       label={intl.formatMessage( {id: "auth.field.user.erp_id"})}
                                        required={true}
                                        value={erpId}
                                        onChange={(e) => setErpId(e.target.value)}
                             />
 
-                            <Button type="submit"><FormattedMessage id={'action.register.check_prereg'}/></Button>
+                            <Button type="submit"><FormattedMessage id={'auth.action.register.check_prereg'}/></Button>
 
                         </> : <>
-
                             <TextField  type={'email'}
                                         name="email"
-                                        label={intl.formatMessage( {id: "field.user.email"})}
+                                        label={intl.formatMessage( {id: "auth.field.user.email"})}
                                         required={true}
                                         value={user.email}
+                                        onChange={(e)=> {setUser({...user, email: e.target.value})}}
+                            />
+                            <TextField type={"password"}
+                                       name="password"
+                                       label={intl.formatMessage( {id: "auth.field.user.password"})}
+                                       required={true}
+                            />
+                            <TextField type={"password"}
+                                       name="password_repeat"
+                                       label={intl.formatMessage( {id: "auth.field.user.password_repeat"})}
+                                       required={true}
                             />
 
                             <Field name="phone">
                                 { props => <MuiPhoneNumber defaultCountry={'us'}
                                                            name="phone"
-                                                           label={intl.formatMessage( {id: "field.user.phone"})}
+                                                           label={intl.formatMessage( {id: "auth.field.user.phone"})}
                                                            required={true}
+                                                           value={user.phone}
+                                                           onChange={(e)=> {setUser({...user, phone: e})}}
                                 /> }
                             </Field>
-
-                            <TextField type={"password"}
-                                       name="password"
-                                       label={intl.formatMessage( {id: "field.user.password"})}
-                                       required={true}
+                            <CountrySelect name="country"
+                                           label={intl.formatMessage( {id: "location.field.country"})}
+                                           required={true}
                             />
-                            <TextField type={"password"}
-                                       name="password_repeat"
-                                       label={intl.formatMessage( {id: "field.user.password_repeat"})}
-                                       required={true}
-                            />
-
                             <Select name="user_type"
-                                    label={intl.formatMessage( {id: "field.user.user_type"})}
+                                    label={intl.formatMessage( {id: "auth.field.user.user_type"})}
                                     required={true}
-                                    data={Object.keys(UserTypes).map(k => ({
-                                        label: intl.formatMessage({id: `field.user.user_type.${UserTypes[k]}`}),
-                                        value: UserTypes[k]
+                                    value={userType}
+                                    onChange={(e)=> {setUserType(e.target.value)}}
+                                    data={Object.keys(UserType).map(k => ({
+                                        label: intl.formatMessage({id: `auth.field.user.user_type.${UserType[k]}`}),
+                                        value: UserType[k]
                                     }))}
                             />
 
+                            {userType === UserType.PRIVATE_INDIVIDUAL && <>
+                                <TextField name="first_name"
+                                           label={intl.formatMessage( {id: "auth.field.user.first_name"})}
+                                           required={true}
+                                />
+                                <TextField name="last_name"
+                                           label={intl.formatMessage( {id: "auth.field.user.last_name"})}
+                                           required={true}
+                                />
+                                <KeyboardDatePicker name="birthday"
+                                                    label={intl.formatMessage( {id: "auth.field.user.birthday"})}
+                                                    required={true}
+                                                    openTo={"year"}
+                                                    format={"dd.MM.yyyy"}
+                                                    dateFunsUtils={DateFnsUtils}
+                                />
+                                <TextField name="city"
+                                           label={intl.formatMessage( {id: "location.field.city"})}
+                                           required={true}
+                                />
+                                <TextField name="address"
+                                           label={intl.formatMessage( {id: "auth.field.user.address"})}
+                                           required={true}
+                                />
+                            </>}
 
-                            <TextField name="first_name"
-                                       label={intl.formatMessage( {id: "field.user.first_name"})}
-                                       required={true}
-                            />
-                            <TextField name="last_name"
-                                       label={intl.formatMessage( {id: "field.user.last_name"})}
-                                       required={true}
-                            />
-
-                            <KeyboardDatePicker name="birthday"
-                                                label={intl.formatMessage( {id: "field.user.birthday"})}
-                                                required={true}
-                                                openTo={"year"}
-                                                format={"dd.MM.yyyy"}
-                                                dateFunsUtils={DateFnsUtils}
-                            />
-
-                            <CountrySelect name="country"
-                                    label={intl.formatMessage( {id: "field.location.country"})}
-                                    required={true}
-                            />
-                            <TextField name="city"
-                                       label={intl.formatMessage( {id: "field.location.city"})}
-                                       required={true}
-                            />
-                            <TextField name="address"
-                                       label={intl.formatMessage( {id: "field.location.address"})}
-                                       required={true}
-                            />
-
-
+                            {userType === UserType.LEGAL_ENTITY && <>
+                                <TextField name="company_reg_number"
+                                           label={intl.formatMessage( {id: "auth.field.user.company_reg_number"})}
+                                           required={true}
+                                />
+                                <TextField name="legal_representative_name"
+                                           label={intl.formatMessage( {id: "auth.field.user.legal_representative_name"})}
+                                           required={true}
+                                />
+                                <TextField name="legal_address"
+                                           label={intl.formatMessage( {id: "auth.field.user.legal_address"})}
+                                           required={true}
+                                />
+                            </>}
 
                             <Checkboxes name="consent_personal_data"
-                                        label={intl.formatMessage( {id: "form.register.consent_personal_data"})}
+                                        label={intl.formatMessage( {id: "auth.form.register.consent_personal_data"})}
                                         required={true}
                                         data={{}}
                             />
 
-                            <Button onClick={() => handleAgreeDialogOpen(DialogTypes.CONFIDENTIALITY)}>{intl.formatMessage( {id: "action.register.consent_confidentiality.open"})}</Button>
+                            <Button onClick={() => handleAgreeDialogOpen(DialogTypes.CONFIDENTIALITY)}>{intl.formatMessage( {id: "auth.action.register.consent_confidentiality.open"})}</Button>
 
                             <Checkboxes name="consent_confidentiality"
                                         required={true}
                                         data={{
-                                            label: intl.formatMessage( {id: "form.register.consent_confidentiality"}),
+                                            label: intl.formatMessage( {id: "auth.form.register.consent_confidentiality"}),
                                             value: checked[DialogTypes.CONFIDENTIALITY]
                                         }}
                                         checked={checked[DialogTypes.CONFIDENTIALITY] === true}
                             />
 
-                            <Button onClick={() => handleAgreeDialogOpen(DialogTypes.OFFER)}>{intl.formatMessage( {id: "action.register.consent_offer.open"})}</Button>
+                            <Button onClick={() => handleAgreeDialogOpen(DialogTypes.OFFER)}>{intl.formatMessage( {id: "auth.action.register.consent_offer.open"})}</Button>
 
                             <Checkboxes name="consent_offer"
                                         required={true}
                                         data={{
-                                            label: intl.formatMessage( {id: "form.register.consent_offer"}),
+                                            label: intl.formatMessage( {id: "auth.form.register.consent_offer"}),
                                             value: checked[DialogTypes.OFFER]
                                         }}
                                         checked={checked[DialogTypes.OFFER] === true}
                             />
 
-                            <Button type="submit" variant="contained"><FormattedMessage id={'action.register.submit'}/></Button>
+                            <Button type="submit" variant="contained"><FormattedMessage id={'auth.action.register.submit'}/></Button>
                         </>}
                     </form>
                 )}
             />
             {user &&
-                <AgreeDialog title={user.currentOffer.title}
-                             body={user.currentOffer.body}
+                <AgreeDialog title={user.currentOffer?.title}
+                             body={user.currentOffer?.body}
                              open={open === DialogTypes.OFFER}
                              handleClose={handleAgreeDialogClose(DialogTypes.OFFER)}
                 />
             }
 
-            <AgreeDialog title={intl.formatMessage( {id: "title.consent_confidentiality"})}
-                         body={intl.formatMessage( {id: "text.consent_confidentiality"})}
+            <AgreeDialog title={intl.formatMessage( {id: "auth.title.consent_confidentiality"})}
+                         body={intl.formatMessage( {id: "auth.text.consent_confidentiality"})}
                          open={open === DialogTypes.CONFIDENTIALITY}
                          handleClose={handleAgreeDialogClose(DialogTypes.CONFIDENTIALITY)}
             />

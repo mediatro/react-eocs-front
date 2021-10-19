@@ -21,16 +21,16 @@ export function LoginPage(props){
                 render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
                         <TextField name="username"
-                                   label={intl.formatMessage({id: 'field.user.email'})}
+                                   label={intl.formatMessage({id: 'auth.field.user.email'})}
                                    required={true}
                         />
                         <TextField type="password"
                                    name="password"
-                                   label={intl.formatMessage({id: 'field.user.password'})}
+                                   label={intl.formatMessage({id: 'auth.field.user.password'})}
                                    required={true}
                         />
 
-                        <Button type="submit" variant="contained"><FormattedMessage id={'action.login.submit'}/></Button>
+                        <Button type="submit" variant="contained"><FormattedMessage id={'auth.action.login.submit'}/></Button>
                     </form>
                 )}
             />

@@ -19,8 +19,8 @@ export function AgreeDialog(props){
             </DialogContent>
 
             <DialogActions>
-                <Button onClick={() => props.handleClose(false)}>{intl.formatMessage({id: 'action.agree_dialog.disagree'})}</Button>
-                <Button onClick={() => props.handleClose(true)} autoFocus>{intl.formatMessage({id: 'action.agree_dialog.agree'})}</Button>
+                <Button onClick={() => props.handleClose(false)}>{intl.formatMessage({id: 'shared.action.agree_dialog.disagree'})}</Button>
+                <Button onClick={() => props.handleClose(true)} autoFocus>{intl.formatMessage({id: 'shared.action.agree_dialog.agree'})}</Button>
             </DialogActions>
         </Dialog>
     );

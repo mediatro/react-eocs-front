@@ -3,13 +3,18 @@ import {ApiService} from "../../../shared/services/ApiService";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {createContext, useContext} from "react";
 
-export const UserTypes = {
+export const UserType = {
     PRIVATE_INDIVIDUAL: 'private_individual',
     LEGAL_ENTITY: 'legal_entity',
 }
 
 const config = {
-    'api.users.path': 'users',
+    'api.users.path': {
+        base: 'users',
+        preReg: 'user_pre_regs',
+        [UserType.PRIVATE_INDIVIDUAL]: 'user_private_individuals',
+        [UserType.LEGAL_ENTITY]: 'user_legal_entities',
+    }
 }
 
 export class UserManager extends ApiService {
@@ -20,15 +25,16 @@ export class UserManager extends ApiService {
     }
 
     doGetPreRegister(erpId){
-        return this._fetch([this.config['api.users.path'], erpId].join('/'));
+        return this._fetch([this.config['api.users.path'].preReg, erpId].join('/'));
     }
 
     doPutRegister(user){
-        return this._fetch([this.config['api.users.path'], user.erpId].join('/'), 'PATCH', JSON.stringify(user))
+        //return this._fetch([this.config['api.users.path'][user.userType], user.erpId].join('/'), 'POST', JSON.stringify(user))
+        return this._fetch(this.config['api.users.path'][user.userType], 'POST', JSON.stringify(user));
     }
 
-    doGetUser(username){
-        return this._fetch(`${this.config['api.users.path']}?email=${username}`);
+    doGetUser(erpId){
+        return this._fetch([this.config['api.users.path'].base,erpId].join('/'));
     }
 
     getPreRegisterQuery(erpId){
@@ -71,10 +77,10 @@ export function UserManagerProvider(props){
     manager.authContext = authc;
 
     authc.manager.userChanged$.subscribe((user) =>{
-       if(user && user.username && !user.erpId){
-           manager.getUserQuery(user.username).subscribe((v) => {
-               if(v.data && v.data['hydra:totalItems'] > 0){
-                   authc.manager.setUser(v.data['hydra:member'][0]);
+       if(user && user.erpId && !user.id){
+           manager.getUserQuery(user.erpId).subscribe((v) => {
+               if(v.data && v.data.id){
+                   authc.manager.setUser(v.data);
                }
            })
        }

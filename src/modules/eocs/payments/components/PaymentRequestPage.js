@@ -1,5 +1,5 @@
 import {Box, Button, Typography} from "@mui/material";
-import {FormattedMessage} from "react-intl";
+import {FormattedMessage, useIntl} from "react-intl";
 import {Link} from "react-router-dom";
 import {Form} from "react-final-form";
 import {TextField} from "mui-rff";
@@ -10,6 +10,7 @@ import {AuthContext} from "../../../shared/services/AuthProvider";
 
 export function PaymentRequestPage(){
 
+    const intl = useIntl();
     const authc = useContext(AuthContext);
     const pmc = useContext(PaymentManagerContext);
 
@@ -28,7 +29,7 @@ export function PaymentRequestPage(){
 
     return (
         <Box sx={{width: 300}}>
-            <Typography>field.payment_detail.limit :</Typography>
+            <Typography><FormattedMessage id={'payment.field.payment_detail.limit'}/> (USD):</Typography>
             <Typography>{getActivePaymentDetail() ? getActivePaymentDetail().payLimit : '-'}</Typography>
 
             <Form
@@ -36,12 +37,12 @@ export function PaymentRequestPage(){
                 render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
                         <TextField name="amount" type={'number'}
-                                   label="field.payment_request.amount"
+                                   label={intl.formatMessage({id: "payment.field.amount"})}
                                    required={true}
                                    inputProps={{ inputMode: 'numeric' }}
                         />
 
-                        <Button type="submit" variant="contained">action.payment_request.submit</Button>
+                        <Button type="submit" variant="contained"><FormattedMessage id={'payment.action.payment_request.submit'}/></Button>
                     </form>
                 )}
             />

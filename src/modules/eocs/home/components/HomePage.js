@@ -25,14 +25,14 @@ export function HomePage(){
     return (
         <Box>
             {!authc.manager.getUser() ? <>
-                <FormattedMessage id={'text.home.welcome.0'}/><br/>
-                <FormattedMessage id={'text.home.welcome.1'}/><br/>
+                <FormattedMessage id={'home.text.welcome.0'}/><br/>
+                <FormattedMessage id={'home.text.welcome.1'}/><br/>
                 <Link to={'/register'}><FormattedMessage id={'page.register'}/></Link>
             </> : <>
                 {umc.manager.isUserVerified() ? <>
                     <PaymentHistory/>
                 </> : <>
-                    <FormattedMessage id={'text.home.wait_for_verification'}/>
+                    <FormattedMessage id={'home.text.wait_for_verification'}/>
                 </>}
             </>}
         </Box>
