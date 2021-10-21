@@ -42,8 +42,9 @@ export function RegisterPage(props){
                 phone: user.phone,
                 userType: userType,
             };
+
             umc.manager.getRegisterQuery(nv).subscribe((v) => {
-                console.log(1111,v)
+                console.log(v);
                 if(v.isSuccess){
                     authc.manager.login(nv.email, nv.password);
                 }

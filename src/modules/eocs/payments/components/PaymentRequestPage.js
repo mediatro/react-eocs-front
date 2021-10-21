@@ -1,13 +1,14 @@
-import {Box, Button, Typography} from "@mui/material";
+import {Box, Button, Paper, Typography} from "@mui/material";
 import {FormattedMessage, useIntl} from "react-intl";
 import {Link} from "react-router-dom";
 import {Form} from "react-final-form";
 import {TextField} from "mui-rff";
 import {useContext} from "react";
-import {PaymentManagerContext} from "../services/PaymentProvier";
+import {PaymentManagerContext} from "../services/PaymentProvider";
 import camelize from "camelize";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
+import {ActivePaymentRequests} from "./ActivePaymentRequests";
 
 export function PaymentRequestPage(){
 
@@ -30,29 +31,35 @@ export function PaymentRequestPage(){
     };
 
     return (
-        <Box sx={{width: 300}}>
-            <Typography><FormattedMessage id={'payment.field.payment_detail.limit'}/> (USD):</Typography>
-            <Typography>{getActivePaymentDetail() ? getActivePaymentDetail().payLimit : '-'}</Typography>
+        <Box sx={{width: 400}}>
+            {authc.manager.getUser().activePaymentRequests &&  <ActivePaymentRequests/>}
 
-            <Form
-                onSubmit={onSubmit}
-                render={({ handleSubmit, values }) => (
-                    <form onSubmit={handleSubmit}>
-                        <TextField name="amount" type={'number'}
-                                   label={intl.formatMessage({id: "payment.field.amount"})}
-                                   required={true}
-                                   inputProps={{ inputMode: 'numeric' }}
-                        />
+            <Paper>
+                <Box p={1} m={1}>
+                    <Typography><FormattedMessage id={'payment.field.payment_detail.limit'}/> (USD):</Typography>
+                    <Typography>{getActivePaymentDetail() ? getActivePaymentDetail().payLimit : '-'}</Typography>
 
-                        <Button type="submit"
-                                variant="contained"
-                                disabled={fic.loading}
-                        >
-                            <FormattedMessage id={'payment.action.payment_request.submit'}/>
-                        </Button>
-                    </form>
-                )}
-            />
+                    <Form
+                        onSubmit={onSubmit}
+                        render={({ handleSubmit, values }) => (
+                            <form onSubmit={handleSubmit}>
+                                <TextField name="amount" type={'number'}
+                                           label={intl.formatMessage({id: "payment.field.amount"})}
+                                           required={true}
+                                           inputProps={{ inputMode: 'numeric' }}
+                                />
+
+                                <Button type="submit"
+                                        variant="contained"
+                                        disabled={fic.loading}
+                                >
+                                    <FormattedMessage id={'payment.action.payment_request.submit'}/>
+                                </Button>
+                            </form>
+                        )}
+                    />
+                </Box>
+            </Paper>
         </Box>
     );
 }

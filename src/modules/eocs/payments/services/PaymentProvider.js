@@ -4,6 +4,7 @@ import {UserManager, UserManagerContext} from "../../auth/services/UserManagerPr
 import {createContext, useContext} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
+import {map} from "rxjs";
 
 export const PaymentType = {
     WIRE_TRANSFER: 'wire_transfer',
@@ -36,6 +37,8 @@ const config = {
 
 export class PaymentManager extends ApiService {
 
+    userManagerContext = null;
+
     constructor() {
         super();
         this.config = {...this.config, ...config}
@@ -57,18 +60,26 @@ export class PaymentManager extends ApiService {
         return this._fetch(this.config['api.invoice_request.path'], 'POST', JSON.stringify(request));
     }
 
+
+
     getCreatePaymentDetailsQuery(details){
         return this.getObserver$({
             queryKey: ['post_payment_details', details],
             queryFn: () => this.doPostPaymentDetails(details)
-        });
+        }).pipe(map((v)=>{
+            this.userManagerContext.manager.reloadUser();
+            return v;
+        }));
     }
 
     getCreatePaymentRequestQuery(request){
         return this.getObserver$({
             queryKey: ['post_payment_request', request],
             queryFn: () => this.doPostPaymentRequest(request)
-        });
+        }).pipe(map((v)=>{
+            this.userManagerContext.manager.reloadUser();
+            return v;
+        }));
     }
 
     getPaymentsQuery(erpId){
@@ -96,10 +107,12 @@ export function PaymentManagerProvider(props){
 
     const queryClient = useQueryClient();
     const authc = useContext(AuthContext);
+    const umc = useContext(UserManagerContext);
     const fic = useContext(FetchInterceptorContext);
 
     manager.queryClient = queryClient;
     manager.authContext = authc;
+    manager.userManagerContext = umc;
     manager.interceptorContext = fic;
 
     return (

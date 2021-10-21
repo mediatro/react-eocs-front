@@ -8,7 +8,7 @@ import {AuthProvider} from "./modules/shared/services/AuthProvider";
 import {BrowserRouter} from "react-router-dom";
 import {QueryClient, QueryClientProvider} from "react-query";
 import {UserManagerProvider} from "./modules/eocs/auth/services/UserManagerProvider";
-import {PaymentManagerProvider} from "./modules/eocs/payments/services/PaymentProvier";
+import {PaymentManagerProvider} from "./modules/eocs/payments/services/PaymentProvider";
 import {FetchInterceptorProvider} from "./modules/shared/services/FetchInterceptorProvider";
 
 import extractedTrans from './config/translations/extracted.json';

@@ -24,7 +24,7 @@ export class AuthManager {
         }
     }
 
-    triggerReload(){
+    triggerRerender(){
         this.userChanged$.next(this.user);
     }
 

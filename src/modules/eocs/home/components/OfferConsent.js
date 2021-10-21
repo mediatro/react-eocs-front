@@ -24,7 +24,7 @@ export function OfferConsent(){
     useEffect(() => {
         if(isChecked && !umc.manager.isActiveOfferConfirmed()){
             umc.manager.getConsentOfferQuery().subscribe((v) => {
-                console.log(umc.manager.isActiveOfferConfirmed());
+                console.log(v);
             });
         }
     }, [isChecked]);

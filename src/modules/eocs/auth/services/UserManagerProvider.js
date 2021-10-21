@@ -51,6 +51,7 @@ export class UserManager extends ApiService {
     }
 
 
+
     getPreRegisterQuery(erpId){
         return this.getObserver$({
             queryKey: ['get_preregister', erpId],
@@ -77,11 +78,12 @@ export class UserManager extends ApiService {
             queryKey: ['post_consent_offer', this.getCurrentUser()],
             queryFn: () => this.doPostConsentOffer()
         }).pipe(map((v)=>{
-            this.getCurrentUser().offersHistoryRecords.push(v.data);
-            this.authContext.manager.triggerReload();
+            this.reloadUser();
             return v;
         }));
     }
+
+
 
     isUserVerified() {
         return this.getCurrentUser()?.currentOffer;
@@ -104,7 +106,16 @@ export class UserManager extends ApiService {
     }
 
     isPaymentRequestAvailable(){
-        return this.isActiveOfferConfirmed() && this.getCurrentUser()?.activePaymentDetail;
+        return this.isActiveOfferConfirmed() && this.getCurrentUser()?.activePaymentDetail
+            && this.getCurrentUser()?.activePaymentDetail.status === 'verified';
+    }
+
+    reloadUser(){
+        this.getUserQuery(this.getCurrentUser().erpId).subscribe((v) => {
+            if(v.data && v.data.id){
+                this.authContext.manager.setUser(v.data);
+            }
+        })
     }
 
 }
@@ -125,11 +136,7 @@ export function UserManagerProvider(props){
 
     authc.manager.userChanged$.subscribe((user) =>{
        if(user && user.erpId && !user.id){
-           manager.getUserQuery(user.erpId).subscribe((v) => {
-               if(v.data && v.data.id){
-                   authc.manager.setUser(v.data);
-               }
-           })
+           manager.reloadUser();
        }
     });
 

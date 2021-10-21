@@ -1,7 +1,7 @@
 import {IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
-import {PaymentManagerContext} from "../services/PaymentProvier";
+import {PaymentManagerContext} from "../services/PaymentProvider";
 import {FormattedMessage, useIntl} from "react-intl";
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import camelize from "camelize";
@@ -42,6 +42,7 @@ export function PaymentHistory(){
                         <TableCell align="right"><FormattedMessage id={'payment.field.amount'}/></TableCell>
                         <TableCell align="right"><FormattedMessage id={'payment.field.currency'}/></TableCell>
                         <TableCell align="right"><FormattedMessage id={'payment.field.method'}/></TableCell>
+                        <TableCell align="right"><FormattedMessage id={'payment.field.detail'}/></TableCell>
                         <TableCell align="right"><FormattedMessage id={'payment.action.invoice_request'}/></TableCell>
                     </TableRow>
                 </TableHead>
@@ -52,6 +53,7 @@ export function PaymentHistory(){
                             <TableCell align="right">{row.amount}</TableCell>
                             <TableCell align="right">{row.detail.currency}</TableCell>
                             <TableCell align="right">{row.detail.method}</TableCell>
+                            <TableCell align="right">{row.detail.displayString}</TableCell>
                             <TableCell align="right">
                                 <IconButton onClick={() => handleRequestInvoice(row)}>
                                     <RequestQuoteIcon/>

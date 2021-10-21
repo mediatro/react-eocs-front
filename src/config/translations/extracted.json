@@ -83,6 +83,8 @@
   },
   "payment.field.date": {
   },
+  "payment.field.detail": {
+  },
   "payment.field.method": {
   },
   "payment.field.oct.card_expiry": {
@@ -108,6 +110,10 @@
   "payment.field.wire.beneficiary_bank_name": {
   },
   "payment.field.wire.beneficiary_bank_swift": {
+  },
+  "payment.text.payment_detail.active": {
+  },
+  "payment.text.payment_requests.active": {
   },
   "shared.action.agree_dialog.agree": {
   },
