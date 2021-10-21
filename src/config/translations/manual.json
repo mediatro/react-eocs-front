@@ -1,0 +1,17 @@
+{
+  "page.home": {
+    "en": "Home",
+    "ru": "Главная"
+  },
+  "page.login": {},
+  "page.logout": {},
+  "page.payment_request": {},
+
+  "auth.field.user.user_type.private_individual": {},
+  "auth.field.user.user_type.legal_entity": {},
+
+  "payment.field.method.wire_transfer": {},
+  "payment.field.method.psp": {},
+  "payment.field.method.crypto": {},
+  "payment.field.method.oct": {}
+}

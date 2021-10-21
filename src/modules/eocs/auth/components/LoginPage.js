@@ -4,14 +4,16 @@ import {Box, Button} from "@mui/material";
 import {useContext} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FormattedMessage, useIntl} from "react-intl";
+import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 
 export function LoginPage(props){
 
     const intl = useIntl();
     const authc = useContext(AuthContext);
+    const fic = useContext(FetchInterceptorContext);
 
     const onSubmit = (v) => {
-        authc.manager.login(v.username, v.password);
+        authc.manager.login(v.username, v.password).catch(reason => fic.setError(reason));
     };
 
     return (
@@ -30,7 +32,12 @@ export function LoginPage(props){
                                    required={true}
                         />
 
-                        <Button type="submit" variant="contained"><FormattedMessage id={'auth.action.login.submit'}/></Button>
+                        <Button type="submit"
+                                variant="contained"
+                                disabled={fic.loading}
+                        >
+                            <FormattedMessage id={'auth.action.login.submit'}/>
+                        </Button>
                     </form>
                 )}
             />

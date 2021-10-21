@@ -12,12 +12,14 @@ import {CountrySelect} from "../../../shared/components/CountrySelect";
 import {UserManagerContext} from "../../auth/services/UserManagerProvider";
 import camelize from "camelize";
 import {AuthContext} from "../../../shared/services/AuthProvider";
+import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 
 export function PaymentDetailsPage(){
 
     const intl = useIntl();
     const authc = useContext(AuthContext);
     const pmc = useContext(PaymentManagerContext);
+    const fic = useContext(FetchInterceptorContext);
 
     const [paymentType, setPaymentType] = useState(PaymentType.WIRE_TRANSFER);
 
@@ -134,7 +136,12 @@ export function PaymentDetailsPage(){
                             />
                         </>}
 
-                        <Button type="submit" variant="contained"><FormattedMessage id={'payment.action.details_create'}/></Button>
+                        <Button type="submit"
+                                variant="contained"
+                                disabled={fic.loading}
+                        >
+                            <FormattedMessage id={'payment.action.details_create'}/>
+                        </Button>
                     </form>
                 )}
             />

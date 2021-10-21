@@ -1,0 +1,116 @@
+{
+  "auth.action.login.submit": {
+  },
+  "auth.action.register.check_prereg": {
+  },
+  "auth.action.register.consent_confidentiality.open": {
+  },
+  "auth.action.register.submit": {
+  },
+  "auth.field.user.address": {
+  },
+  "auth.field.user.birthday": {
+  },
+  "auth.field.user.company_reg_number": {
+  },
+  "auth.field.user.email": {
+  },
+  "auth.field.user.erp_id": {
+  },
+  "auth.field.user.first_name": {
+  },
+  "auth.field.user.last_name": {
+  },
+  "auth.field.user.legal_address": {
+  },
+  "auth.field.user.legal_representative_name": {
+  },
+  "auth.field.user.password": {
+  },
+  "auth.field.user.password_repeat": {
+  },
+  "auth.field.user.phone": {
+  },
+  "auth.field.user.user_type": {
+  },
+  "auth.form.register.consent_confidentiality": {
+  },
+  "auth.form.register.consent_personal_data": {
+  },
+  "auth.text.consent_confidentiality": {
+  },
+  "auth.text.register.request_prereg": {
+  },
+  "auth.title.consent_confidentiality": {
+  },
+  "home.action.offer_consent.open_dialog": {
+  },
+  "home.text.offer_consent_required": {
+  },
+  "home.text.offer_consent_review": {
+  },
+  "home.text.payment_details_required": {
+  },
+  "home.text.wait_for_payment_details_verification": {
+  },
+  "home.text.wait_for_verification": {
+  },
+  "home.text.welcome.0": {
+  },
+  "home.text.welcome.1": {
+  },
+  "location.field.city": {
+  },
+  "location.field.country": {
+  },
+  "page.payment_details": {
+  },
+  "page.register": {
+  },
+  "payment.action.details_create": {
+  },
+  "payment.action.invoice_request": {
+  },
+  "payment.action.payment_request.submit": {
+  },
+  "payment.field.amount": {
+  },
+  "payment.field.crypto.platform": {
+  },
+  "payment.field.crypto.wallet_number": {
+  },
+  "payment.field.currency": {
+  },
+  "payment.field.date": {
+  },
+  "payment.field.method": {
+  },
+  "payment.field.oct.card_expiry": {
+  },
+  "payment.field.oct.card_holder_name": {
+  },
+  "payment.field.oct.card_number": {
+  },
+  "payment.field.payment_detail.limit": {
+  },
+  "payment.field.psp.account_holder_name": {
+  },
+  "payment.field.psp.platform": {
+  },
+  "payment.field.psp.wallet_number_email": {
+  },
+  "payment.field.wire.account_holder_name": {
+  },
+  "payment.field.wire.beneficiary_bank_account_iban": {
+  },
+  "payment.field.wire.beneficiary_bank_address": {
+  },
+  "payment.field.wire.beneficiary_bank_name": {
+  },
+  "payment.field.wire.beneficiary_bank_swift": {
+  },
+  "shared.action.agree_dialog.agree": {
+  },
+  "shared.action.agree_dialog.disagree": {
+  }
+}

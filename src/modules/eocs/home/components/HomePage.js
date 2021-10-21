@@ -1,6 +1,6 @@
-import {FormattedMessage} from "react-intl";
+import {FormattedMessage, useIntl} from "react-intl";
 import {
-    Box,
+    Box, Button,
     MenuItem,
     Paper,
     Select,
@@ -12,10 +12,15 @@ import {
     TableRow
 } from "@mui/material";
 import {Link} from "react-router-dom";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {PaymentHistory} from "../../payments/components/PaymentHistory";
 import {UserManagerContext} from "../../auth/services/UserManagerProvider";
+import {AgreeDialog, useAgreeDialog} from "../../../shared/components/AgreeDialog";
+import parse from 'html-react-parser';
+import {OfferConsent} from "./OfferConsent";
+import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
+
 
 export function HomePage(){
 
@@ -29,10 +34,22 @@ export function HomePage(){
                 <FormattedMessage id={'home.text.welcome.1'}/><br/>
                 <Link to={'/register'}><FormattedMessage id={'page.register'}/></Link>
             </> : <>
-                {umc.manager.isUserVerified() ? <>
-                    <PaymentHistory/>
-                </> : <>
-                    <FormattedMessage id={'home.text.wait_for_verification'}/>
+                {authc.manager.getUser().id && <>
+                    {(!authc.manager.getUser().paymentDetails || authc.manager.getUser().paymentDetails.length < 1) &&
+                        <Box>
+                            <FormattedMessage id={'home.text.payment_details_required'}/>
+                            <Link to={'/payment-details'}><FormattedMessage id={'page.payment_details'}/></Link>
+                        </Box>
+                    }
+
+                    {!umc.manager.isUserVerified() ? <>
+                        <FormattedMessage id={'home.text.wait_for_verification'}/>
+
+                    </> : <>
+                        {!umc.manager.isPaymentRequestAvailable() && <FormattedMessage id={'home.text.wait_for_payment_details_verification'}/>}
+                        <OfferConsent/>
+                        {umc.manager.isActiveOfferConfirmed() &&<PaymentHistory/>}
+                    </>}
                 </>}
             </>}
         </Box>

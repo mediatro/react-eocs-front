@@ -3,8 +3,8 @@ import {useContext, useEffect} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {Link, useLocation} from "react-router-dom";
 import {FormattedMessage} from "react-intl";
-import {routes} from "../../../../services/AppRouting";
 import {UserManagerContext} from "../../auth/services/UserManagerProvider";
+import {routes} from "../../../../config/routing";
 
 export function SideNav(props){
 
@@ -13,7 +13,7 @@ export function SideNav(props){
     const location = useLocation();
 
     const isActive = (routeName) => {
-        return location.pathname == routeName;
+        return location.pathname === routeName;
     }
 
     const isRouteAvailable = (route) => {
@@ -23,7 +23,7 @@ export function SideNav(props){
 
         if(route.conditions.authed === true){
             if(route.conditions.verified === true) {
-                return umc.manager.isUserVerified();
+                return umc.manager.isPaymentRequestAvailable();
             }
             return authc.manager.checkAuth();
         }else if(route.conditions.authed === false){

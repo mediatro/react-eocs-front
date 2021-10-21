@@ -7,13 +7,13 @@ import DateFnsUtils from '@date-io/date-fns';
 import {FormattedMessage, useIntl} from "react-intl";
 import {CountrySelect} from "../../../shared/components/CountrySelect";
 import {useContext, useState} from "react";
-import {AgreeDialog} from "../../../shared/components/AgreeDialog";
+import {AgreeDialog, useAgreeDialog} from "../../../shared/components/AgreeDialog";
 import {UserManagerContext, UserManagerProvider, UserType} from "../services/UserManagerProvider";
 import camelize from 'camelize';
 import {AuthContext} from "../../../shared/services/AuthProvider";
+import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 
 const DialogTypes = {
-    OFFER: 'offer',
     CONFIDENTIALITY: 'confidentiality',
 }
 
@@ -22,27 +22,13 @@ export function RegisterPage(props){
     const intl = useIntl();
     const umc = useContext(UserManagerContext);
     const authc = useContext(AuthContext);
+    const fic = useContext(FetchInterceptorContext);
 
     const [erpId, setErpId] = useState(null);
     const [user, setUser] = useState(null);
     const [userType, setUserType] = useState(UserType.PRIVATE_INDIVIDUAL);
 
-    const [open, setOpen] = useState(false);
-    const [checked, setChecked] = useState({});
-
-
-    const handleAgreeDialogOpen = (v) => {
-        setOpen(v);
-    };
-
-    const handleAgreeDialogClose = (t) => {
-        return (v) => {
-            setOpen(false);
-            let nc = checked;
-            nc[t] = v;
-            setChecked(nc);
-        };
-    };
+    const {open, checked, handleAgreeDialogOpen, handleAgreeDialogClose} = useAgreeDialog();
 
     const onSubmit = (formValue) => {
         if(!user){
@@ -57,7 +43,10 @@ export function RegisterPage(props){
                 userType: userType,
             };
             umc.manager.getRegisterQuery(nv).subscribe((v) => {
-                authc.manager.login(nv.email, nv.password);
+                console.log(1111,v)
+                if(v.isSuccess){
+                    authc.manager.login(nv.email, nv.password);
+                }
             });
         }
     };
@@ -78,7 +67,11 @@ export function RegisterPage(props){
                                        onChange={(e) => setErpId(e.target.value)}
                             />
 
-                            <Button type="submit"><FormattedMessage id={'auth.action.register.check_prereg'}/></Button>
+                            <Button type="submit"
+                                    disabled={fic.loading}
+                            >
+                                <FormattedMessage id={'auth.action.register.check_prereg'}/>
+                            </Button>
 
                         </> : <>
                             <TextField  type={'email'}
@@ -181,29 +174,16 @@ export function RegisterPage(props){
                                         checked={checked[DialogTypes.CONFIDENTIALITY] === true}
                             />
 
-                            <Button onClick={() => handleAgreeDialogOpen(DialogTypes.OFFER)}>{intl.formatMessage( {id: "auth.action.register.consent_offer.open"})}</Button>
-
-                            <Checkboxes name="consent_offer"
-                                        required={true}
-                                        data={{
-                                            label: intl.formatMessage( {id: "auth.form.register.consent_offer"}),
-                                            value: checked[DialogTypes.OFFER]
-                                        }}
-                                        checked={checked[DialogTypes.OFFER] === true}
-                            />
-
-                            <Button type="submit" variant="contained"><FormattedMessage id={'auth.action.register.submit'}/></Button>
+                            <Button type="submit"
+                                    variant="contained"
+                                    disabled={fic.loading}
+                            >
+                                <FormattedMessage id={'auth.action.register.submit'}/>
+                            </Button>
                         </>}
                     </form>
                 )}
             />
-            {user &&
-                <AgreeDialog title={user.currentOffer?.title}
-                             body={user.currentOffer?.body}
-                             open={open === DialogTypes.OFFER}
-                             handleClose={handleAgreeDialogClose(DialogTypes.OFFER)}
-                />
-            }
 
             <AgreeDialog title={intl.formatMessage( {id: "auth.title.consent_confidentiality"})}
                          body={intl.formatMessage( {id: "auth.text.consent_confidentiality"})}

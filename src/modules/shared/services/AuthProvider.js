@@ -24,6 +24,10 @@ export class AuthManager {
         }
     }
 
+    triggerReload(){
+        this.userChanged$.next(this.user);
+    }
+
     login(username, password){
         const ENTRYPOINT = this.config["api.url"];
 
@@ -38,9 +42,10 @@ export class AuthManager {
         return fetch(request)
             .then((response) => {
                 if (response.status < 200 || response.status >= 300) {
-                    throw new Error(response.statusText);
+                    return Promise.reject(response.statusText);
+                }else{
+                    return response.json();
                 }
-                return response.json();
             })
             .then(({ token }) => {
                 localStorage.setItem("token", token);

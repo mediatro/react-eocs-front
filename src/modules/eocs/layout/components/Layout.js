@@ -14,20 +14,20 @@ import {
 import {LangSwitch} from "./LangSwitch";
 import {SideNav} from "./SideNav";
 import {AppRouting} from "../../../../services/AppRouting";
+import {useContext} from "react";
+import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
+import {CircularProgress} from "@mui/material";
 
 export function Layout(props){
 
     const drawerWidth = 240;
+    const fic = useContext(FetchInterceptorContext);
 
-    return (<>
-        <CssBaseline />
-        <Container>
-            <AppBar position="fixed"
-                    sx={{
-                        width: `calc(100% - ${drawerWidth}px)`,
-                        ml: `${drawerWidth}px`
-                    }}
-            >
+    return (
+
+        <Box style={{ display: 'flex' }}>
+            <CssBaseline />
+            <AppBar position="fixed" style={{ zIndex: 1300}}>
                 <Toolbar>
                     <Grid container>
                         <Grid item xs={3}>
@@ -37,39 +37,33 @@ export function Layout(props){
                         <Grid item>
                             <LangSwitch/>
                         </Grid>
+
+                        <Grid item>
+                            {fic.loading && <CircularProgress />}
+                            {fic.error && !fic.loading && <Typography color={"error"}>{fic.error}</Typography>}
+                        </Grid>
                     </Grid>
                 </Toolbar>
             </AppBar>
 
-            <Drawer variant="permanent"
-                    anchor="left"
-                    sx={{
-                        width: drawerWidth,
-                        flexShrink: 0,
-                        '& .MuiDrawer-paper': {
-                            width: drawerWidth,
-                            boxSizing: 'border-box',
-                        },
-                    }}
+            <Drawer
+                variant="permanent"
+                style={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+                }}
             >
                 <Toolbar />
-                <Divider />
-
-                <SideNav/>
-
-                <Divider />
+                <Box style={{ overflow: 'auto' }}>
+                    <SideNav/>
+                </Box>
             </Drawer>
 
-            <Box component="main"
-                 sx={{
-                     flexGrow: 1,
-                     bgcolor: 'background.default',
-                     p: 3
-                 }}
-            >
+            <Box p={3} component="main" style={{ flexGrow: 1}}>
                 <Toolbar />
                 <AppRouting/>
             </Box>
-        </Container>
-    </>);
+        </Box>
+    );
 }

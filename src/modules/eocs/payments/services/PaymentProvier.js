@@ -3,6 +3,7 @@ import {useQueryClient} from "react-query";
 import {UserManager, UserManagerContext} from "../../auth/services/UserManagerProvider";
 import {createContext, useContext} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
+import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 
 export const PaymentType = {
     WIRE_TRANSFER: 'wire_transfer',
@@ -95,9 +96,11 @@ export function PaymentManagerProvider(props){
 
     const queryClient = useQueryClient();
     const authc = useContext(AuthContext);
+    const fic = useContext(FetchInterceptorContext);
 
     manager.queryClient = queryClient;
     manager.authContext = authc;
+    manager.interceptorContext = fic;
 
     return (
         <PaymentManagerContext.Provider value={{manager: manager}}>

@@ -9,9 +9,15 @@ import {BrowserRouter} from "react-router-dom";
 import {QueryClient, QueryClientProvider} from "react-query";
 import {UserManagerProvider} from "./modules/eocs/auth/services/UserManagerProvider";
 import {PaymentManagerProvider} from "./modules/eocs/payments/services/PaymentProvier";
+import {FetchInterceptorProvider} from "./modules/shared/services/FetchInterceptorProvider";
+
+import extractedTrans from './config/translations/extracted.json';
+import manualTrans from './config/translations/manual.json';
+
 
 const queryClient = new QueryClient({defaultOptions: {
     queries: {
+        retry: false,
         refetchOnWindowFocus: false,
     },
 }});
@@ -19,41 +25,34 @@ const queryClient = new QueryClient({defaultOptions: {
 
 function App() {
 
-
-    let translationsEn = {
-        'page.home': 'Home',
-        'form.password': 'Password',
-        'text.home.welcome.0': 'Welcome future partner!',
-        'text.home.welcome.1': 'Before filling out a bid you need to register.',
+    let translationMap = {
+        en: {},
+        ru: {},
     };
 
-    let translationsRu = {
-        'page.home': 'Главная',
-        'form.password': 'Пароль',
-        'text.home.welcome.0': 'Добро пожаловать!',
-        'text.home.welcome.1': 'Для использования сервиса необходимо зарегистрироваться.',
-    };
+    let translations = {...extractedTrans, ...manualTrans};
 
-    let translations = {
-        'en': translationsEn,
-        'ru': translationsRu,
-    };
+    for(let k in translations){
+        translationMap.en[k] = translations[k].en ? translations[k].en : k;
+        translationMap.ru[k] = translations[k].ru ? translations[k].ru : k;
+    }
 
     return (
-            <I18NProvider translations={translations}>
-                <QueryClientProvider client={queryClient}>
-                    <BrowserRouter>
-                        <AuthProvider>
-                            <UserManagerProvider>
-                                <PaymentManagerProvider>
-                                        <Layout/>
-                                </PaymentManagerProvider>
-                            </UserManagerProvider>
-                        </AuthProvider>
-                    </BrowserRouter>
-                </QueryClientProvider>
+            <I18NProvider translations={translationMap}>
+                <FetchInterceptorProvider>
+                    <QueryClientProvider client={queryClient}>
+                        <BrowserRouter>
+                            <AuthProvider>
+                                <UserManagerProvider>
+                                    <PaymentManagerProvider>
+                                            <Layout/>
+                                    </PaymentManagerProvider>
+                                </UserManagerProvider>
+                            </AuthProvider>
+                        </BrowserRouter>
+                    </QueryClientProvider>
+                </FetchInterceptorProvider>
             </I18NProvider>
-
     );
 }
 

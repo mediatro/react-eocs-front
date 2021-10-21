@@ -2,6 +2,8 @@ import {QueryObserver, useQueryClient} from "react-query";
 import {ApiService} from "../../../shared/services/ApiService";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {createContext, useContext} from "react";
+import {map} from "rxjs";
+import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 
 export const UserType = {
     PRIVATE_INDIVIDUAL: 'private_individual',
@@ -9,6 +11,7 @@ export const UserType = {
 }
 
 const config = {
+    'api.offer_history.path': 'offer_history_records',
     'api.users.path': {
         base: 'users',
         preReg: 'user_pre_regs',
@@ -24,18 +27,29 @@ export class UserManager extends ApiService {
         this.config = {...this.config, ...config}
     }
 
+    getCurrentUser(){
+        return this.authContext.manager.getUser();
+    }
+
     doGetPreRegister(erpId){
         return this._fetch([this.config['api.users.path'].preReg, erpId].join('/'));
     }
 
-    doPutRegister(user){
-        //return this._fetch([this.config['api.users.path'][user.userType], user.erpId].join('/'), 'POST', JSON.stringify(user))
+    doPostRegister(user){
         return this._fetch(this.config['api.users.path'][user.userType], 'POST', JSON.stringify(user));
     }
 
     doGetUser(erpId){
         return this._fetch([this.config['api.users.path'].base,erpId].join('/'));
     }
+
+    doPostConsentOffer(){
+        return this._fetch(this.config['api.offer_history.path'], 'POST', JSON.stringify({
+            user: this.getCurrentUser()['@id'],
+            offer: this.getCurrentUser().currentOffer['@id'],
+        }));
+    }
+
 
     getPreRegisterQuery(erpId){
         return this.getObserver$({
@@ -46,20 +60,51 @@ export class UserManager extends ApiService {
 
     getRegisterQuery(user){
         return this.getObserver$({
-            queryKey: ['put_register', user],
-            queryFn: () => this.doPutRegister(user)
+            queryKey: ['post_register', user],
+            queryFn: () => this.doPostRegister(user)
         });
     }
 
-    getUserQuery(username){
+    getUserQuery(erpId){
         return this.getObserver$({
-            queryKey: ['get_user', username],
-            queryFn: () => this.doGetUser(username)
+            queryKey: ['get_user', erpId],
+            queryFn: () => this.doGetUser(erpId)
         });
+    }
+
+    getConsentOfferQuery(){
+        return this.getObserver$({
+            queryKey: ['post_consent_offer', this.getCurrentUser()],
+            queryFn: () => this.doPostConsentOffer()
+        }).pipe(map((v)=>{
+            this.getCurrentUser().offersHistoryRecords.push(v.data);
+            this.authContext.manager.triggerReload();
+            return v;
+        }));
     }
 
     isUserVerified() {
-        return this.authContext.manager.getUser()?.status === 'new';
+        return this.getCurrentUser()?.currentOffer;
+    }
+
+    isActiveOfferConfirmed(){
+        if(!this.getCurrentUser() || !this.getCurrentUser().offersHistoryRecords){
+            return false;
+        }
+
+        let ret = false;
+        for (let record of this.getCurrentUser().offersHistoryRecords){
+            if(record.offer['@id'] === this.getCurrentUser()?.currentOffer['@id']
+            || record.offer === this.getCurrentUser()?.currentOffer['@id']){
+                ret = true;
+                break;
+            }
+        }
+        return ret;
+    }
+
+    isPaymentRequestAvailable(){
+        return this.isActiveOfferConfirmed() && this.getCurrentUser()?.activePaymentDetail;
     }
 
 }
@@ -72,9 +117,11 @@ export function UserManagerProvider(props){
 
     const queryClient = useQueryClient();
     const authc = useContext(AuthContext);
+    const fic = useContext(FetchInterceptorContext);
 
     manager.queryClient = queryClient;
     manager.authContext = authc;
+    manager.interceptorContext = fic;
 
     authc.manager.userChanged$.subscribe((user) =>{
        if(user && user.erpId && !user.id){

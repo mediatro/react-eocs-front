@@ -7,12 +7,14 @@ import {useContext} from "react";
 import {PaymentManagerContext} from "../services/PaymentProvier";
 import camelize from "camelize";
 import {AuthContext} from "../../../shared/services/AuthProvider";
+import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 
 export function PaymentRequestPage(){
 
     const intl = useIntl();
     const authc = useContext(AuthContext);
     const pmc = useContext(PaymentManagerContext);
+    const fic = useContext(FetchInterceptorContext);
 
     const getActivePaymentDetail = () => authc.manager.getUser()['activePaymentDetail'];
 
@@ -42,7 +44,12 @@ export function PaymentRequestPage(){
                                    inputProps={{ inputMode: 'numeric' }}
                         />
 
-                        <Button type="submit" variant="contained"><FormattedMessage id={'payment.action.payment_request.submit'}/></Button>
+                        <Button type="submit"
+                                variant="contained"
+                                disabled={fic.loading}
+                        >
+                            <FormattedMessage id={'payment.action.payment_request.submit'}/>
+                        </Button>
                     </form>
                 )}
             />

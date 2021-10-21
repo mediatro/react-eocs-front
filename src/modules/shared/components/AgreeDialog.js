@@ -2,6 +2,36 @@ import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import {useState} from "react";
 import {useIntl} from "react-intl";
 
+
+export const useAgreeDialog = () => {
+
+    const [open, setOpen] = useState(false);
+    const [checked, setChecked] = useState({});
+
+    const handleAgreeDialogOpen = (v) => {
+        setOpen(v);
+    };
+
+    const handleAgreeDialogClose = (t) => {
+        return (v) => {
+            setOpen(false);
+            let nc = checked;
+            nc[t] = v;
+            setChecked(nc);
+        };
+    };
+
+    return {
+        open: open,
+        setOpen: setOpen,
+        checked: checked,
+        setChecked: setChecked,
+        handleAgreeDialogOpen: handleAgreeDialogOpen,
+        handleAgreeDialogClose: handleAgreeDialogClose,
+    }
+
+}
+
 export function AgreeDialog(props){
 
     const intl = useIntl();

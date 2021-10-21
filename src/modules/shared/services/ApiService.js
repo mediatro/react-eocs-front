@@ -6,6 +6,7 @@ export class ApiService {
 
     queryClient = null;
     authContext = null;
+    interceptorContext = null;
 
     config = {
         'api.url': API_HOST,
@@ -16,6 +17,9 @@ export class ApiService {
     }
 
     _fetch(url, method = 'GET', body = null){
+        this.interceptorContext.setLoading(true);
+        this.interceptorContext.setError(null);
+
         return fetch(this._getUrl(url), {
             method: method,
             headers: {...this.authContext.manager.getHeaders(),
@@ -24,10 +28,11 @@ export class ApiService {
             },
             body: body
         }).then(response => {
+            this.interceptorContext.setLoading(false);
             if (!response.ok) {
                 return response.json().then(m => {
-                    throw new Error(JSON.stringify(m));
-                })
+                    return Promise.reject(m);
+                });
             }
             return response.json();
         })
@@ -40,12 +45,14 @@ export class ApiService {
         qo.subscribe(v => {
             if(v.isError){
                 try {
-                    let r = JSON.parse(v.error.message);
-                    if(r.code == 401 && !this.authContext.manager.checkAuth()){
+                    if(v.error.status === 401 && !this.authContext.manager.checkAuth()){
                         this.authContext.manager.requestLogin(v);
+                    }else{
+                        this.interceptorContext.setError(v.error['hydra:title']);
                     }
                 } catch (e) {
                     console.log(e);
+                    this.interceptorContext.setError('Error');
                 }
             }
             ret.next(v);
