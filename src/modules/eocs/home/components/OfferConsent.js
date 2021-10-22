@@ -1,5 +1,5 @@
 import {FormattedMessage, useIntl} from "react-intl";
-import {Box, Button} from "@mui/material";
+import {Box, Button, Typography} from "@mui/material";
 import {AgreeDialog, useAgreeDialog} from "../../../shared/components/AgreeDialog";
 import parse from "html-react-parser";
 import {useContext, useEffect} from "react";
@@ -31,10 +31,12 @@ export function OfferConsent(){
 
     return(
         <Box>
-            {!umc.manager.isActiveOfferConfirmed()
-                ? <FormattedMessage id={'home.text.offer_consent_required'}/>
-                : <FormattedMessage id={'home.text.offer_consent_review'}/>
-            }
+            <Typography>
+                {!umc.manager.isActiveOfferConfirmed()
+                    ? <FormattedMessage id={'home.text.offer_consent_required'}/>
+                    : <FormattedMessage id={'home.text.offer_consent_review'}/>
+                }
+            </Typography>
 
             <Button onClick={() => handleAgreeDialogOpen(DialogTypes.OFFER)}>{intl.formatMessage( {id: "home.action.offer_consent.open_dialog"})}</Button>
 

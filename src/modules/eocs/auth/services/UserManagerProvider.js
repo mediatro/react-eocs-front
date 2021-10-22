@@ -11,6 +11,7 @@ export const UserType = {
 }
 
 const config = {
+    'api.image.path': 'media_objects',
     'api.offer_history.path': 'offer_history_records',
     'api.users.path': {
         base: 'users',
@@ -50,6 +51,10 @@ export class UserManager extends ApiService {
         }));
     }
 
+    doPostImage(payload){
+        return this._fetch(this.config['api.image.path'], 'POST', payload, true);
+    }
+
 
 
     getPreRegisterQuery(erpId){
@@ -83,6 +88,13 @@ export class UserManager extends ApiService {
         }));
     }
 
+    getPostImageQuery(payload){
+        return this.getObserver$({
+            queryKey: ['post_image', payload],
+            queryFn: () => this.doPostImage(payload)
+        });
+    }
+
 
 
     isUserVerified() {
@@ -109,6 +121,9 @@ export class UserManager extends ApiService {
         return this.isActiveOfferConfirmed() && this.getCurrentUser()?.activePaymentDetail
             && this.getCurrentUser()?.activePaymentDetail.status === 'verified';
     }
+
+
+
 
     reloadUser(){
         this.getUserQuery(this.getCurrentUser().erpId).subscribe((v) => {

@@ -12,6 +12,7 @@ import {UserManagerContext, UserManagerProvider, UserType} from "../services/Use
 import camelize from 'camelize';
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
+import { switchMap } from 'rxjs/operators';
 
 const DialogTypes = {
     CONFIDENTIALITY: 'confidentiality',
@@ -36,24 +37,37 @@ export function RegisterPage(props){
                 setUser(v.data);
             });
         }else{
+            const payload = new FormData();
+            console.log(formValue)
+            payload.append("file", formValue.image[0]);
+            console.log(222, payload)
+
             let nv = {...camelize(formValue),
                 erpId: user.erpId,
                 email: user.email,
                 phone: user.phone,
                 userType: userType,
+
             };
 
-            umc.manager.getRegisterQuery(nv).subscribe((v) => {
+            umc.manager.getPostImageQuery(payload).pipe(switchMap((v) => {
+                nv.image = v.isSuccess ? v.data["@id"] : null;
+                return umc.manager.getRegisterQuery(nv);
+            })).subscribe((v) => {
                 console.log(v);
                 if(v.isSuccess){
                     authc.manager.login(nv.email, nv.password);
                 }
             });
+
+
+
+
         }
     };
 
     return (
-        <Box sx={{width: 300}}>
+        <Box sx={{width: 400}}>
             <Form
                 onSubmit={onSubmit}
                 render={({ handleSubmit, values }) => (
@@ -68,12 +82,13 @@ export function RegisterPage(props){
                                        onChange={(e) => setErpId(e.target.value)}
                             />
 
-                            <Button type="submit"
-                                    disabled={fic.loading}
-                            >
-                                <FormattedMessage id={'auth.action.register.check_prereg'}/>
-                            </Button>
-
+                            <Box mt={2}>
+                                <Button type="submit"
+                                        disabled={fic.loading}
+                                >
+                                    <FormattedMessage id={'auth.action.register.check_prereg'}/>
+                                </Button>
+                            </Box>
                         </> : <>
                             <TextField  type={'email'}
                                         name="email"
@@ -97,7 +112,6 @@ export function RegisterPage(props){
                                 { props => <MuiPhoneNumber defaultCountry={'us'}
                                                            name="phone"
                                                            label={intl.formatMessage( {id: "auth.field.user.phone"})}
-                                                           required={true}
                                                            value={user.phone}
                                                            onChange={(e)=> {setUser({...user, phone: e})}}
                                 /> }
@@ -159,9 +173,11 @@ export function RegisterPage(props){
                             </>}
 
                             <Checkboxes name="consent_personal_data"
-                                        label={intl.formatMessage( {id: "auth.form.register.consent_personal_data"})}
                                         required={true}
-                                        data={{}}
+                                        data={{
+                                            label: intl.formatMessage( {id: "auth.form.register.consent_personal_data"}),
+                                            value: true
+                                        }}
                             />
 
                             <Button onClick={() => handleAgreeDialogOpen(DialogTypes.CONFIDENTIALITY)}>{intl.formatMessage( {id: "auth.action.register.consent_confidentiality.open"})}</Button>
@@ -175,12 +191,26 @@ export function RegisterPage(props){
                                         checked={checked[DialogTypes.CONFIDENTIALITY] === true}
                             />
 
-                            <Button type="submit"
-                                    variant="contained"
-                                    disabled={fic.loading}
-                            >
-                                <FormattedMessage id={'auth.action.register.submit'}/>
-                            </Button>
+                            <Field name="image">
+                                {({ input: { value, onChange, ...input } }) => (
+                                    <input
+                                        {...input}
+                                        type="file"
+                                        name={"image"}
+                                        required={"true"}
+                                        onChange={({ target }) => onChange(target.files)} // instead of the default target.value
+                                    />
+                                )}
+                             </Field>
+
+                            <Box mt={2}>
+                                <Button type="submit"
+                                        variant="contained"
+                                        disabled={fic.loading}
+                                >
+                                    <FormattedMessage id={'auth.action.register.submit'}/>
+                                </Button>
+                            </Box>
                         </>}
                     </form>
                 )}

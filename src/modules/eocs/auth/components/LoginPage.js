@@ -32,12 +32,14 @@ export function LoginPage(props){
                                    required={true}
                         />
 
-                        <Button type="submit"
-                                variant="contained"
-                                disabled={fic.loading}
-                        >
-                            <FormattedMessage id={'auth.action.login.submit'}/>
-                        </Button>
+                        <Box mt={2}>
+                            <Button type="submit"
+                                    variant="contained"
+                                    disabled={fic.loading}
+                            >
+                                <FormattedMessage id={'auth.action.login.submit'}/>
+                            </Button>
+                        </Box>
                     </form>
                 )}
             />

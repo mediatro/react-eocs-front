@@ -5,12 +5,14 @@ import {Link, useLocation} from "react-router-dom";
 import {FormattedMessage} from "react-intl";
 import {UserManagerContext} from "../../auth/services/UserManagerProvider";
 import {routes} from "../../../../config/routing";
+import {PaymentManagerContext} from "../../payments/services/PaymentProvider";
 
 export function SideNav(props){
 
+    const location = useLocation();
     const authc = useContext(AuthContext);
     const umc = useContext(UserManagerContext);
-    const location = useLocation();
+    const pmc = useContext(PaymentManagerContext);
 
     const isActive = (routeName) => {
         return location.pathname === routeName;
@@ -23,7 +25,7 @@ export function SideNav(props){
 
         if(route.conditions.authed === true){
             if(route.conditions.verified === true) {
-                return umc.manager.isPaymentRequestAvailable();
+                return pmc.manager.isPaymentRequestAvailable();
             }
             return authc.manager.checkAuth();
         }else if(route.conditions.authed === false){

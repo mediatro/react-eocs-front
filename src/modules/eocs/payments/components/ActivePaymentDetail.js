@@ -10,11 +10,12 @@ export function ActivePaymentDetail(){
     return (
         <Paper>
             <Box p={1}>
-                <FormattedMessage id={'payment.text.payment_detail.active'}/><br/>
+                <Typography>
+                    <FormattedMessage id={'payment.text.payment_detail.active'}/>
+                </Typography>
                 {authc.manager.getUser().paymentDetails.map((detail,i) => (i == authc.manager.getUser().paymentDetails.length-1 &&
                     <Typography>{detail.method} - {detail.displayString} - {detail.status}</Typography>
                 ))}
-
             </Box>
         </Paper>
     );

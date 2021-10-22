@@ -23,6 +23,12 @@ export const AvailableCurrencies = {
     [CurrencyType.CRYPTO]: ['BTC', 'ETH', 'USDT'],
 };
 
+export const BlockReason = {
+    MONTH_END: 'month_end',
+    REQUEST_ACTIVE: 'request_active',
+    REQUEST_TOO_SOON: 'request_too_soon',
+}
+
 const config = {
     'api.payment.path': 'payments',
     'api.payment_request.path': 'payment_requests',
@@ -94,6 +100,38 @@ export class PaymentManager extends ApiService {
             queryKey: ['post_invoice_request', request],
             queryFn: () => this.doPostInvoiceRequest(request)
         });
+    }
+
+    isPaymentRequestAvailable(){
+        return this.userManagerContext.manager.isActiveOfferConfirmed()
+            && this.userManagerContext.manager.getCurrentUser()?.activePaymentDetail
+            && this.userManagerContext.manager.getCurrentUser()?.activePaymentDetail.status === 'verified';
+    }
+
+    isPaymentRequestBlocked(){
+        //return false;
+        let requests = this.userManagerContext.manager.getCurrentUser().activePaymentRequests;
+        if(requests){
+            for(let r of requests){
+                if(r.status === 'new') {
+                    return BlockReason.REQUEST_ACTIVE;
+                }else{
+                    return BlockReason.REQUEST_TOO_SOON;
+                }
+            }
+        }
+        return false;
+    }
+
+    isPaymentDetailsBlocked(){
+        //return false;
+        if(!this.userManagerContext.manager.getCurrentUser().activePaymentDetail){
+            return false;
+        }
+        let d = new Date();
+        let currentDay = d.getDate();
+        let totalDays =  new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+        return totalDays - currentDay < 15 ? BlockReason.MONTH_END : false;
     }
 
 }

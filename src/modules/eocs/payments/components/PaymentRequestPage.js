@@ -32,32 +32,42 @@ export function PaymentRequestPage(){
 
     return (
         <Box sx={{width: 400}}>
-            {authc.manager.getUser().activePaymentRequests &&  <ActivePaymentRequests/>}
+
+            {authc.manager.getUser().activePaymentRequests && authc.manager.getUser().activePaymentRequests.length > 0 && <ActivePaymentRequests/>}
 
             <Paper>
                 <Box p={1} m={1}>
-                    <Typography><FormattedMessage id={'payment.field.payment_detail.limit'}/> (USD):</Typography>
-                    <Typography>{getActivePaymentDetail() ? getActivePaymentDetail().payLimit : '-'}</Typography>
+                    {pmc.manager.isPaymentRequestBlocked() ? <>
+                        <Typography>
+                            <FormattedMessage id={'payment.text.payment_request.blocked'}/><br/>
+                            <FormattedMessage id={`payment.text.payment_request.blocked.${pmc.manager.isPaymentRequestBlocked()}`}/>
+                        </Typography>
+                    </> : <>
+                        <Typography><FormattedMessage id={'payment.field.payment_detail.limit'}/> (USD):</Typography>
+                        <Typography>{getActivePaymentDetail() ? getActivePaymentDetail().payLimit : '-'}</Typography>
 
-                    <Form
-                        onSubmit={onSubmit}
-                        render={({ handleSubmit, values }) => (
-                            <form onSubmit={handleSubmit}>
-                                <TextField name="amount" type={'number'}
-                                           label={intl.formatMessage({id: "payment.field.amount"})}
-                                           required={true}
-                                           inputProps={{ inputMode: 'numeric' }}
-                                />
+                        <Form
+                            onSubmit={onSubmit}
+                            render={({ handleSubmit, values }) => (
+                                <form onSubmit={handleSubmit}>
+                                    <TextField name="amount" type={'number'}
+                                               label={intl.formatMessage({id: "payment.field.amount"})}
+                                               required={true}
+                                               inputProps={{ inputMode: 'numeric' }}
+                                    />
 
-                                <Button type="submit"
-                                        variant="contained"
-                                        disabled={fic.loading}
-                                >
-                                    <FormattedMessage id={'payment.action.payment_request.submit'}/>
-                                </Button>
-                            </form>
-                        )}
-                    />
+                                    <Box mt={2}>
+                                        <Button type="submit"
+                                                variant="contained"
+                                                disabled={fic.loading}
+                                        >
+                                            <FormattedMessage id={'payment.action.payment_request.submit'}/>
+                                        </Button>
+                                    </Box>
+                                </form>
+                            )}
+                        />
+                    </>}
                 </Box>
             </Paper>
         </Box>

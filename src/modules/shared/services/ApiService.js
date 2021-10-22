@@ -16,16 +16,21 @@ export class ApiService {
         return [this.config["api.url"], url].join('/');
     }
 
-    _fetch(url, method = 'GET', body = null){
+    _fetch(url, method = 'GET', body = null, file = null){
         this.interceptorContext.setLoading(true);
         this.interceptorContext.setError(null);
 
+        let headers =  {
+            'accept': 'application/ld+json',
+        };
+
+        if(!file){
+            headers['Content-Type'] = method === 'PATCH' ? 'application/merge-patch+json' : 'application/ld+json';
+        }
+
         return fetch(this._getUrl(url), {
             method: method,
-            headers: {...this.authContext.manager.getHeaders(),
-                'accept': 'application/ld+json',
-                'Content-Type': method === 'PATCH' ? 'application/merge-patch+json' : 'application/ld+json',
-            },
+            headers: {...this.authContext.manager.getHeaders(), ...headers},
             body: body
         }).then(response => {
             this.interceptorContext.setLoading(false);

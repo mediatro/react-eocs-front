@@ -7,6 +7,11 @@ import {HomePage} from "../modules/eocs/home/components/HomePage";
 
 export const routes = [
     {
+        path: '/',
+        message: 'page.home',
+        component: HomePage,
+    },
+    {
         path: '/payment-details',
         message: 'page.payment_details',
         component: PaymentDetailsPage,
@@ -17,12 +22,6 @@ export const routes = [
         message: 'page.payment_request',
         component: PaymentRequestPage,
         conditions: {authed: true, verified: true},
-    },
-    {
-        path: '/logout',
-        message: 'page.logout',
-        component: LogoutPage,
-        conditions: {authed: true},
     },
 
     {
@@ -39,8 +38,9 @@ export const routes = [
     },
 
     {
-        path: '/',
-        message: 'page.home',
-        component: HomePage,
+        path: '/logout',
+        message: 'page.logout',
+        component: LogoutPage,
+        conditions: {authed: true},
     },
 ];

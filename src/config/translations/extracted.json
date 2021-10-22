@@ -113,6 +113,10 @@
   },
   "payment.text.payment_detail.active": {
   },
+  "payment.text.payment_details.blocked": {
+  },
+  "payment.text.payment_request.blocked": {
+  },
   "payment.text.payment_requests.active": {
   },
   "shared.action.agree_dialog.agree": {

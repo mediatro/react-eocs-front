@@ -13,5 +13,10 @@
   "payment.field.method.wire_transfer": {},
   "payment.field.method.psp": {},
   "payment.field.method.crypto": {},
-  "payment.field.method.oct": {}
+  "payment.field.method.oct": {},
+
+  "payment.text.payment_details.blocked.month_end": {},
+
+  "payment.text.payment_request.blocked.request_active": {},
+  "payment.text.payment_request.blocked.request_too_soon": {}
 }

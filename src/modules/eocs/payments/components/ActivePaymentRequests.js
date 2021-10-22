@@ -10,7 +10,9 @@ export function ActivePaymentRequests(){
     return (
         <Paper>
             <Box p={1}>
-                <FormattedMessage id={'payment.text.payment_requests.active'}/><br/>
+                <Typography>
+                    <FormattedMessage id={'payment.text.payment_requests.active'}/>
+                </Typography>
                 {authc.manager.getUser().activePaymentRequests.map((request) =>
                     <Typography>
                         {request.detail.currency} {request.amount} - {request.status}<br/>
