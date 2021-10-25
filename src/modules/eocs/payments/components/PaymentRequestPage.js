@@ -3,12 +3,13 @@ import {FormattedMessage, useIntl} from "react-intl";
 import {Link} from "react-router-dom";
 import {Form} from "react-final-form";
 import {TextField} from "mui-rff";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {PaymentManagerContext} from "../services/PaymentProvider";
 import camelize from "camelize";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 import {ActivePaymentRequests} from "./ActivePaymentRequests";
+import {OnChange} from "react-final-form-listeners";
 
 export function PaymentRequestPage(){
 
@@ -16,6 +17,8 @@ export function PaymentRequestPage(){
     const authc = useContext(AuthContext);
     const pmc = useContext(PaymentManagerContext);
     const fic = useContext(FetchInterceptorContext);
+
+    const [amount, setAmount] = useState(0);
 
     const getActivePaymentDetail = () => authc.manager.getUser()['activePaymentDetail'];
 
@@ -50,11 +53,18 @@ export function PaymentRequestPage(){
                             onSubmit={onSubmit}
                             render={({ handleSubmit, values }) => (
                                 <form onSubmit={handleSubmit}>
+
                                     <TextField name="amount" type={'number'}
                                                label={intl.formatMessage({id: "payment.field.amount"})}
                                                required={true}
+                                               value={amount}
                                                inputProps={{ inputMode: 'numeric' }}
                                     />
+                                    <OnChange name="amount">
+                                        {(value, previous) => {
+                                            setAmount(Math.min(value, getActivePaymentDetail().payLimit));
+                                        }}
+                                    </OnChange>
 
                                     <Box mt={2}>
                                         <Button type="submit"
