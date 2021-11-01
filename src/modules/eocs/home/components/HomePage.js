@@ -15,12 +15,13 @@ import {Link} from "react-router-dom";
 import {useContext, useEffect} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {PaymentHistory} from "../../payments/components/PaymentHistory";
-import {UserManagerContext} from "../../auth/services/UserManagerProvider";
+import {UserManagerContext, UserType} from "../../auth/services/UserManagerProvider";
 import {AgreeDialog, useAgreeDialog} from "../../../shared/components/AgreeDialog";
 import parse from 'html-react-parser';
 import {OfferConsent} from "./OfferConsent";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 import {PaymentManagerContext} from "../../payments/services/PaymentProvider";
+import {PBox} from "../../../shared/components/PBox";
 
 
 export function HomePage(){
@@ -32,37 +33,64 @@ export function HomePage(){
     return (
         <Box>
             {!authc.manager.getUser() ? <>
-                <Typography>
-                    <FormattedMessage id={'home.text.welcome.0'}/><br/>
-                    <FormattedMessage id={'home.text.welcome.1'}/><br/>
-                    <Link to={'/register'}><FormattedMessage id={'page.register'}/></Link>
-                </Typography>
+                <PBox>
+                    <Typography>
+                        <FormattedMessage id={'home.text.welcome.0'}/><br/>
+                        <FormattedMessage id={'home.text.welcome.1'}/><br/>
+                        <Link to={'/register'}><FormattedMessage id={'page.register'}/></Link>
+                    </Typography>
+                </PBox>
             </> : <>
                 {authc.manager.getUser().id && <>
+
+                    <PBox>
+                        <Typography>
+                            <FormattedMessage id={'auth.field.user.erp_id'}/>: {authc.manager.getUser().erpId}
+                        </Typography>
+
+                        {authc.manager.getUser().userType === UserType.PRIVATE_INDIVIDUAL && <Typography>
+                            <FormattedMessage id={'auth.field.user.full_name'}/>: {authc.manager.getUser().firstName} {authc.manager.getUser().lastName}
+                        </Typography>}
+                    </PBox>
+
+                    {authc.manager.getUser().activePaymentDetail && <PBox>
+                        <Typography variant={'h4'}>
+                            <FormattedMessage id={'payment.field.payment_detail.active'}/>
+                        </Typography>
+
+                        <Typography>
+                            <Typography>{authc.manager.getUser().activePaymentDetail["@id"]} - {authc.manager.getUser().activePaymentDetail.displayString} - {authc.manager.getUser().activePaymentDetail.status}</Typography>
+                        </Typography>
+                    </PBox>}
+
+
                     {(!authc.manager.getUser().paymentDetails || authc.manager.getUser().paymentDetails.length < 1) &&
-                        <Box>
+                        <PBox>
                             <Typography>
                                 <FormattedMessage id={'home.text.payment_details_required'}/>
                                 <Link to={'/payment-details'}><FormattedMessage id={'page.payment_details'}/></Link>
                             </Typography>
-                        </Box>
+                        </PBox>
                     }
 
                     {!umc.manager.isUserVerified() ? <>
-                        <Typography>
-                            <FormattedMessage id={'home.text.wait_for_verification'}/>
-                        </Typography>
+                        <PBox>
+                            <Typography>
+                                <FormattedMessage id={'home.text.wait_for_verification'}/>
+                            </Typography>
+                        </PBox>
 
                     </> : <>
-                        {umc.manager.isActiveOfferConfirmed() && !pmc.manager.isPaymentRequestAvailable() &&
-                            <Typography>
-                                <FormattedMessage id={'home.text.wait_for_payment_details_verification'}/>
-                            </Typography>
+                        {!pmc.manager.isPaymentRequestAvailable() &&
+                            <PBox>
+                                <Typography>
+                                    <FormattedMessage id={'home.text.wait_for_payment_details_verification'}/>
+                                </Typography>
+                            </PBox>
                         }
 
                         <OfferConsent/>
-
-                        {umc.manager.isActiveOfferConfirmed() && <PaymentHistory/>}
+                        <PaymentHistory/>
                     </>}
                 </>}
             </>}

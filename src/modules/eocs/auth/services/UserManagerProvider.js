@@ -44,10 +44,9 @@ export class UserManager extends ApiService {
         return this._fetch([this.config['api.users.path'].base,erpId].join('/'));
     }
 
-    doPostConsentOffer(){
-        return this._fetch(this.config['api.offer_history.path'], 'POST', JSON.stringify({
-            user: this.getCurrentUser()['@id'],
-            offer: this.getCurrentUser().currentOffer['@id'],
+    doPatchConsentOffer(record){
+        return this._fetch(record['@id'].replace(/^\//, ''), 'PATCH', JSON.stringify({
+            consented: true,
         }));
     }
 
@@ -78,10 +77,10 @@ export class UserManager extends ApiService {
         });
     }
 
-    getConsentOfferQuery(){
+    getConsentOfferQuery(record){
         return this.getObserver$({
-            queryKey: ['post_consent_offer', this.getCurrentUser()],
-            queryFn: () => this.doPostConsentOffer()
+            queryKey: ['patch_consent_offer', record],
+            queryFn: () => this.doPatchConsentOffer(record)
         }).pipe(map((v)=>{
             this.reloadUser();
             return v;
@@ -97,11 +96,24 @@ export class UserManager extends ApiService {
 
 
 
+
     isUserVerified() {
-        return this.getCurrentUser()?.currentOffer;
+        return this.getCurrentUser()?.availableSiteRecords.length > 0;
     }
 
-    isActiveOfferConfirmed(){
+    isActiveOfferConfirmed(record){
+        if(!this.getCurrentUser()){
+            return false;
+        }
+        if(!record){
+            return true;
+        }
+
+        return record.consented;
+
+
+        //--------
+
         if(!this.getCurrentUser() || !this.getCurrentUser().offersHistoryRecords){
             return false;
         }

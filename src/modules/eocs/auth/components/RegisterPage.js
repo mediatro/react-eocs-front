@@ -6,13 +6,14 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {FormattedMessage, useIntl} from "react-intl";
 import {CountrySelect} from "../../../shared/components/CountrySelect";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {AgreeDialog, useAgreeDialog} from "../../../shared/components/AgreeDialog";
 import {UserManagerContext, UserManagerProvider, UserType} from "../services/UserManagerProvider";
 import camelize from 'camelize';
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 import { switchMap } from 'rxjs/operators';
+import {useLocation} from "react-router-dom";
 
 const DialogTypes = {
     CONFIDENTIALITY: 'confidentiality',
@@ -21,6 +22,7 @@ const DialogTypes = {
 export function RegisterPage(props){
 
     const intl = useIntl();
+    let location = useLocation();
     const umc = useContext(UserManagerContext);
     const authc = useContext(AuthContext);
     const fic = useContext(FetchInterceptorContext);
@@ -31,11 +33,23 @@ export function RegisterPage(props){
 
     const {open, checked, handleAgreeDialogOpen, handleAgreeDialogClose} = useAgreeDialog();
 
+    const fetchPreReg = (erpId) => {
+        umc.manager.getPreRegisterQuery(erpId).subscribe((v) => {
+            setUser(v.data);
+        });
+    }
+
+    useEffect(() => {
+        let idFromQuery = new URLSearchParams(location.search).get('erpId');
+        if(idFromQuery) {
+            setErpId(idFromQuery);
+            fetchPreReg(idFromQuery)
+        }
+    }, []);
+
     const onSubmit = (formValue) => {
         if(!user){
-            umc.manager.getPreRegisterQuery(erpId).subscribe((v) => {
-                setUser(v.data);
-            });
+           fetchPreReg(erpId);
         }else{
             const payload = new FormData();
             console.log(formValue)
@@ -59,10 +73,6 @@ export function RegisterPage(props){
                     authc.manager.login(nv.email, nv.password);
                 }
             });
-
-
-
-
         }
     };
 

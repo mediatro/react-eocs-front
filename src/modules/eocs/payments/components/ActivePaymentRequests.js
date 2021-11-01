@@ -10,13 +10,14 @@ export function ActivePaymentRequests(){
     return (
         <Paper>
             <Box p={1}>
-                <Typography>
+                <Typography variant={'h4'}>
                     <FormattedMessage id={'payment.text.payment_requests.active'}/>
                 </Typography>
                 {authc.manager.getUser().activePaymentRequests.map((request) =>
                     <Typography>
-                        {request.detail.currency} {request.amount} - {request.status}<br/>
-                        {request.detail.method} - {request.detail.displayString}
+                        USD {request.amount} - {request.status}
+                        <br/>
+                        {request.detail.method} - {request.detail.displayString} - {request.siteHistoryRecord.site.name}
                     </Typography>
                 )}
             </Box>

@@ -5,8 +5,14 @@ import {Field, Form} from "react-final-form";
 import {Checkboxes, KeyboardDatePicker, Select, TextField} from "mui-rff";
 import MuiPhoneNumber from "material-ui-phone-number";
 import DateFnsUtils from "@date-io/date-fns";
-import {AvailableCurrencies, CurrencyType, PaymentManagerContext, PaymentType} from "../services/PaymentProvider";
-import {useContext, useMemo, useState} from "react";
+import {
+    AvailableCurrencies,
+    CurrencyType,
+    PaymentManagerContext,
+    PaymentType,
+    Priority
+} from "../services/PaymentProvider";
+import {useContext, useEffect, useMemo, useState} from "react";
 import countryList from "react-select-country-list";
 import {CountrySelect} from "../../../shared/components/CountrySelect";
 import {UserManagerContext} from "../../auth/services/UserManagerProvider";
@@ -14,6 +20,8 @@ import camelize from "camelize";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 import {ActivePaymentDetail} from "./ActivePaymentDetail";
+import {PBox} from "../../../shared/components/PBox";
+import {PaymentDetailsForm} from "./PaymentDetailsForm";
 
 export function PaymentDetailsPage(){
 
@@ -22,145 +30,29 @@ export function PaymentDetailsPage(){
     const pmc = useContext(PaymentManagerContext);
     const fic = useContext(FetchInterceptorContext);
 
-    const [paymentType, setPaymentType] = useState(PaymentType.WIRE_TRANSFER);
-
-    const onSubmit = (formValue) => {
-        let nv = {...camelize(formValue), ...{
-            method: paymentType,
-            user: authc.manager.getUser()['@id'],
-        }};
-
-        pmc.manager.getCreatePaymentDetailsQuery(nv).subscribe((v) => {
-            console.log(v);
-        });
-    };
-
-    const getCurrencyType = () => {
-        return paymentType === PaymentType.CRYPTO ? CurrencyType.CRYPTO : CurrencyType.REAL;
-    }
 
 
     return (
-        <Box style={{width: 400}}>
+        <Box style={{width: 600}}>
 
             {authc.manager.getUser().paymentDetails && <ActivePaymentDetail/>}
 
-            <Paper>
-                <Box p={1} m={1}>
-                    {pmc.manager.isPaymentDetailsBlocked() ? <>
-                        <Typography>
-                            <FormattedMessage id={'payment.text.payment_details.blocked'}/><br/>
-                            <FormattedMessage id={`payment.text.payment_details.blocked.${pmc.manager.isPaymentDetailsBlocked()}`}/>
-                        </Typography>
-                    </> : <>
-                        <Form
-                            onSubmit={onSubmit}
-                            render={({ handleSubmit, values }) => (
-                                <form onSubmit={handleSubmit}>
-                                    <Select name="method"
-                                            label={intl.formatMessage({id: "payment.field.method"})}
-                                            required={true}
-                                            value={paymentType}
-                                            onChange={(e)=> {setPaymentType(e.target.value)}}
-                                            data={Object.keys(PaymentType).map(k => ({
-                                                label: intl.formatMessage({id: `payment.field.method.${PaymentType[k]}`}),
-                                                value: PaymentType[k]
-                                            }))}
-                                    />
+            {pmc.manager.isPaymentDetailsBlocked() && <PBox>
+                <Typography>
+                    <FormattedMessage id={'payment.text.payment_details.blocked'}/>
+                </Typography>
+                <Typography>
+                    <FormattedMessage id={`payment.text.payment_details.blocked.${pmc.manager.isPaymentDetailsBlocked()}`}/>
+                </Typography>
+            </PBox>}
 
-                                    <Select name="currency"
-                                            label={intl.formatMessage({id: "payment.field.currency"})}
-                                            required={true}
-                                            data={AvailableCurrencies[getCurrencyType()].map(v => ({
-                                                label: v,
-                                                value: v
-                                            }))}
-                                    />
+            {pmc.manager.getAvailablePriorities().length === 1 && pmc.manager.getAvailablePriorities()[0] == Priority.SECONDARY && <PBox>
+                <Typography>
+                    <FormattedMessage id={'payment.text.payment_details.secondary_only'}/>
+                </Typography>
+            </PBox>}
 
-                                    {paymentType === PaymentType.WIRE_TRANSFER && <>
-                                        <TextField name="account_holder_name"
-                                                   label={intl.formatMessage({id: "payment.field.wire.account_holder_name"})}
-                                                   required={true}
-                                        />
-                                        <CountrySelect name="country"
-                                                       label="form.country"
-                                                       required={true}
-                                        />
-
-                                        <TextField name="beneficiary_bank_name"
-                                                   label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_name"})}
-                                                   required={true}
-                                        />
-                                        <TextField name="beneficiary_bank_address"
-                                                   label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_address"})}
-                                                   required={true}
-                                        />
-                                        <TextField name="beneficiary_bank_account_iban"
-                                                   label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_account_iban"})}
-                                                   required={true}
-                                        />
-                                        <TextField name="beneficiary_bank_swift"
-                                                   label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_swift"})}
-                                                   required={true}
-                                        />
-
-                                    </>}
-
-                                    {paymentType === PaymentType.PSP && <>
-                                        <TextField name="platform"
-                                                   label={intl.formatMessage({id: "payment.field.psp.platform"})}
-                                                   required={true}
-                                        />
-                                        <TextField name="account_holder_name"
-                                                   label={intl.formatMessage({id: "payment.field.psp.account_holder_name"})}
-                                                   required={true}
-                                        />
-                                        <TextField name="wallet_number_email"
-                                                   label={intl.formatMessage({id: "payment.field.psp.wallet_number_email"})}
-                                                   required={true}
-                                        />
-                                    </>}
-
-                                    {paymentType === PaymentType.OCT && <>
-                                        <TextField name="card_holder_name"
-                                                   label={intl.formatMessage({id: "payment.field.oct.card_holder_name"})}
-                                                   required={true}
-                                        />
-                                        <TextField name="card_number"
-                                                   label={intl.formatMessage({id: "payment.field.oct.card_number"})}
-                                                   required={true}
-                                        />
-                                        <TextField name="card_expiry"
-                                                   label={intl.formatMessage({id: "payment.field.oct.card_expiry"})}
-                                                   required={true}
-                                        />
-                                    </>}
-
-                                    {paymentType === PaymentType.CRYPTO && <>
-                                        <TextField name="platform"
-                                                   label={intl.formatMessage({id: "payment.field.crypto.platform"})}
-                                                   required={true}
-                                        />
-                                        <TextField name="wallet_number"
-                                                   label={intl.formatMessage({id: "payment.field.crypto.wallet_number"})}
-                                                   required={true}
-                                        />
-                                    </>}
-
-                                    <Box mt={2}>
-                                        <Button type="submit"
-                                                variant="contained"
-                                                disabled={fic.loading}
-                                        >
-                                            <FormattedMessage id={'payment.action.details_create'}/>
-                                        </Button>
-                                    </Box>
-                                </form>
-                            )}
-                        />
-                    </>}
-                </Box>
-            </Paper>
+            <PaymentDetailsForm/>
         </Box>
     );
 }

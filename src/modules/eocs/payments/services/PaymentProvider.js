@@ -6,6 +6,11 @@ import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 import {map} from "rxjs";
 
+export const Priority = {
+    PRIMARY: 'primary',
+    SECONDARY: 'secondary',
+}
+
 export const PaymentType = {
     WIRE_TRANSFER: 'wire_transfer',
     PSP: 'psp',
@@ -31,6 +36,7 @@ export const BlockReason = {
 
 const config = {
     'api.payment.path': 'payments',
+    'api.payment_methods.path': 'payment_methods',
     'api.payment_request.path': 'payment_requests',
     'api.invoice_request.path': 'invoice_requests',
     'api.payment_details.path': {
@@ -50,8 +56,12 @@ export class PaymentManager extends ApiService {
         this.config = {...this.config, ...config}
     }
 
-    doPostPaymentDetails(details){
-        return this._fetch(this.config['api.payment_details.path'][details.method], 'POST', JSON.stringify(details));
+    doGetPaymentMethods(){
+        return this._fetch(this.config['api.payment_methods.path'], 'GET');
+    }
+
+    doPostPaymentDetails(details, method){
+        return this._fetch(this.config['api.payment_details.path'][method], 'POST', JSON.stringify(details));
     }
 
     doPostPaymentRequest(request){
@@ -66,12 +76,24 @@ export class PaymentManager extends ApiService {
         return this._fetch(this.config['api.invoice_request.path'], 'POST', JSON.stringify(request));
     }
 
+    doPatchActivateDetail(detail){
+        return this._fetch(this.getUser()['@id'].replace(/^\//, ''), 'PATCH', JSON.stringify({
+            activePaymentDetail: detail['@id'],
+        }));
+    }
 
 
-    getCreatePaymentDetailsQuery(details){
+    getPaymentMethodsQuery(){
+        return this.getObserver$({
+            queryKey: 'get_methods',
+            queryFn: () => this.doGetPaymentMethods()
+        });
+    }
+
+    getCreatePaymentDetailsQuery(details, method){
         return this.getObserver$({
             queryKey: ['post_payment_details', details],
-            queryFn: () => this.doPostPaymentDetails(details)
+            queryFn: () => this.doPostPaymentDetails(details, method)
         }).pipe(map((v)=>{
             this.userManagerContext.manager.reloadUser();
             return v;
@@ -102,15 +124,32 @@ export class PaymentManager extends ApiService {
         });
     }
 
+    getActivateDetailQuery(detail){
+        return this.getObserver$({
+            queryKey: ['patch_activate_detail', detail],
+            queryFn: () => this.doPatchActivateDetail(detail)
+        }).pipe(map((v)=>{
+            this.userManagerContext.manager.reloadUser();
+            return v;
+        }));
+    }
+
+
+
+
+    getUser(){
+        return this.userManagerContext.manager.getCurrentUser();
+    }
+
     isPaymentRequestAvailable(){
         return this.userManagerContext.manager.isActiveOfferConfirmed()
-            && this.userManagerContext.manager.getCurrentUser()?.activePaymentDetail
-            && this.userManagerContext.manager.getCurrentUser()?.activePaymentDetail.status === 'verified';
+            && this.getUser()?.activePaymentDetail
+            && this.getUser()?.activePaymentDetail.status === 'verified';
     }
 
     isPaymentRequestBlocked(){
         //return false;
-        let requests = this.userManagerContext.manager.getCurrentUser().activePaymentRequests;
+        let requests = this.getUser().activePaymentRequests;
         if(requests){
             for(let r of requests){
                 if(r.status === 'new') {
@@ -125,13 +164,35 @@ export class PaymentManager extends ApiService {
 
     isPaymentDetailsBlocked(){
         //return false;
-        if(!this.userManagerContext.manager.getCurrentUser().activePaymentDetail){
+        if(!this.getUser().activePaymentDetail){
             return false;
         }
         let d = new Date();
         let currentDay = d.getDate();
         let totalDays =  new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
         return totalDays - currentDay < 15 ? BlockReason.MONTH_END : false;
+    }
+
+    hasPendingDetails(){
+        for(let detail of this.getUser().paymentDetails){
+            if(detail.status === 'new'){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getAvailablePriorities(){
+        if(!this.getUser().paymentDetails){
+            return [];
+        }
+        if(this.getUser().paymentDetails.length < 1){
+            return [Priority.PRIMARY];
+        }
+        if(this.hasPendingDetails()){
+            return [Priority.SECONDARY];
+        }
+        return Object.keys(Priority).map(k => Priority[k]);
     }
 
 }

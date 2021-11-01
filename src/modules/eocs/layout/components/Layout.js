@@ -16,7 +16,7 @@ import {SideNav} from "./SideNav";
 import {AppRouting} from "../../../../services/AppRouting";
 import {useContext} from "react";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, Link} from "@mui/material";
 
 export function Layout(props){
 
@@ -41,6 +41,10 @@ export function Layout(props){
                         <Grid item>
                             {fic.loading && <CircularProgress />}
                             {fic.error && !fic.loading && <Typography color={"error"}>{fic.error}</Typography>}
+                        </Grid>
+
+                        <Grid item>
+                            <Link href={'mailto:info@eocse.com'} color={'#ffffff'}>Support</Link>
                         </Grid>
                     </Grid>
                 </Toolbar>

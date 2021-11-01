@@ -19,6 +19,8 @@
   },
   "auth.field.user.first_name": {
   },
+  "auth.field.user.full_name": {
+  },
   "auth.field.user.last_name": {
   },
   "auth.field.user.legal_address": {
@@ -93,7 +95,11 @@
   },
   "payment.field.oct.card_number": {
   },
+  "payment.field.payment_detail.active": {
+  },
   "payment.field.payment_detail.limit": {
+  },
+  "payment.field.payment_details.priority": {
   },
   "payment.field.psp.account_holder_name": {
   },
@@ -111,9 +117,15 @@
   },
   "payment.field.wire.beneficiary_bank_swift": {
   },
-  "payment.text.payment_detail.active": {
+  "payment.text.no_payments_yet": {
+  },
+  "payment.text.payment_detail.create": {
+  },
+  "payment.text.payment_detail.list": {
   },
   "payment.text.payment_details.blocked": {
+  },
+  "payment.text.payment_details.secondary_only": {
   },
   "payment.text.payment_request.blocked": {
   },
@@ -122,5 +134,7 @@
   "shared.action.agree_dialog.agree": {
   },
   "shared.action.agree_dialog.disagree": {
+  },
+  "user.field.site": {
   }
 }
