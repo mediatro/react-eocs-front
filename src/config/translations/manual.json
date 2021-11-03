@@ -3,20 +3,56 @@
     "en": "Home",
     "ru": "Главная"
   },
-  "page.login": {},
-  "page.logout": {},
-  "page.payment_request": {},
+  "page.login": {
+    "en": "Sign in",
+    "ru": "Войти" 
+  },
+  "page.logout": {
+    "en": "Sign out",
+    "ru": "Выход"  
+  },
+  "page.payment_request": {
+    "en": "Payout",
+    "ru": "Запрос на выплату" 
+  },
 
-  "auth.field.user.user_type.private_individual": {},
-  "auth.field.user.user_type.legal_entity": {},
+  "auth.field.user.user_type.private_individual": {
+    "en": "Private individual",
+    "ru": "Физ. лицо" 
+  },
+  "auth.field.user.user_type.legal_entity": {
+    "en": "Legal entity",
+    "ru": "Юр. лицо" 
+  },
 
-  "payment.field.method.wire_transfer": {},
-  "payment.field.method.psp": {},
-  "payment.field.method.crypto": {},
-  "payment.field.method.oct": {},
+  "payment.field.method.wire_transfer": {
+    "en": "Wire_transfer",
+    "ru": "Банковский перевод" 
+  },
+  "payment.field.method.psp": {
+    "en": "Payment Service Provider",
+    "ru": "Платежная система" 
+  },
+  "payment.field.method.crypto": {
+    "en": "Cryptocurrency",
+    "ru": "Криптовалюта"
+  },
+  "payment.field.method.oct": {
+    "en": "Original Credit Transaction",
+    "ru": "Выплата на карту"
+  },
 
-  "payment.text.payment_details.blocked.month_end": {},
+  "payment.text.payment_details.blocked.month_end": {
+    "en": "You can change the payment details only from 1 to 14",
+    "ru": "Возможность менять реквизиты доступна с 1 по 14 число месяца"
+  },
 
-  "payment.text.payment_request.blocked.request_active": {},
-  "payment.text.payment_request.blocked.request_too_soon": {}
+  "payment.text.payment_request.blocked.request_active": {
+    "en": "Compliance procedure in progress",
+    "ru": "Идет процедура проверки реквизитов"
+  },
+  "payment.text.payment_request.blocked.request_too_soon": {
+    "en": "You can't create a new payout until the previous one has been processed",
+    "ru": "Нельзя создать новый запрос на выплату, пока не обработан текущий"
+  }
 }

@@ -227,7 +227,7 @@ export function RegisterPage(props){
             />
 
             <AgreeDialog title={intl.formatMessage( {id: "auth.title.consent_confidentiality"})}
-                         body={intl.formatMessage( {id: "auth.text.consent_confidentiality"})}
+                         body={<pre style={{whiteSpace: 'pre-wrap'}}>{intl.formatMessage( {id: "auth.text.consent_confidentiality"})}</pre>}
                          open={open === DialogTypes.CONFIDENTIALITY}
                          handleClose={handleAgreeDialogClose(DialogTypes.CONFIDENTIALITY)}
             />
