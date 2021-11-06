@@ -12,6 +12,7 @@ export const UserType = {
 
 const config = {
     'api.image.path': 'media_objects',
+    'api.reset_password.path': 'reset_password_requests',
     'api.offer_history.path': 'offer_history_records',
     'api.users.path': {
         base: 'users',
@@ -32,6 +33,8 @@ export class UserManager extends ApiService {
         return this.authContext.manager.getUser();
     }
 
+
+
     doGetPreRegister(erpId){
         return this._fetch([this.config['api.users.path'].preReg, erpId].join('/'));
     }
@@ -41,7 +44,11 @@ export class UserManager extends ApiService {
     }
 
     doGetUser(erpId){
-        return this._fetch([this.config['api.users.path'].base,erpId].join('/'));
+        return this._fetch([this.config['api.users.path'].base, erpId].join('/'));
+    }
+
+    doPatchUser(user){
+        return this._fetch([this.config['api.users.path'].base, user.erpId].join('/'), 'PATCH', JSON.stringify(user));
     }
 
     doPatchConsentOffer(record){
@@ -52,6 +59,14 @@ export class UserManager extends ApiService {
 
     doPostImage(payload){
         return this._fetch(this.config['api.image.path'], 'POST', payload, true);
+    }
+
+    doPostResetPasswordRequest(email){
+        return this._fetch(this.config['api.reset_password.path'], 'POST', JSON.stringify({email: email}));
+    }
+
+    doPatchResetPasswordRequest(request){
+        return this._fetch([this.config['api.reset_password.path'], request.token].join('/'), 'PATCH', JSON.stringify(request));
     }
 
 
@@ -77,11 +92,21 @@ export class UserManager extends ApiService {
         });
     }
 
+    getUpdateUserQuery(user){
+        return this.getObserver$({
+            queryKey: ['patch_user', user],
+            queryFn: () => this.doPatchUser(user)
+        }).pipe(map((v) => {
+            this.reloadUser();
+            return v;
+        }));
+    }
+
     getConsentOfferQuery(record){
         return this.getObserver$({
             queryKey: ['patch_consent_offer', record],
             queryFn: () => this.doPatchConsentOffer(record)
-        }).pipe(map((v)=>{
+        }).pipe(map((v) => {
             this.reloadUser();
             return v;
         }));
@@ -91,6 +116,20 @@ export class UserManager extends ApiService {
         return this.getObserver$({
             queryKey: ['post_image', payload],
             queryFn: () => this.doPostImage(payload)
+        });
+    }
+
+    getResetPasswordRequestQuery(email){
+        return this.getObserver$({
+            queryKey: ['post_reset_password_request', email],
+            queryFn: () => this.doPostResetPasswordRequest(email)
+        });
+    }
+
+    getResetPasswordExecuteQuery(request){
+        return this.getObserver$({
+            queryKey: ['patch_reset_password_execute', request],
+            queryFn: () => this.doPatchResetPasswordRequest(request)
         });
     }
 
@@ -128,12 +167,6 @@ export class UserManager extends ApiService {
         }
         return ret;
     }
-
-    isPaymentRequestAvailable(){
-        return this.isActiveOfferConfirmed() && this.getCurrentUser()?.activePaymentDetail
-            && this.getCurrentUser()?.activePaymentDetail.status === 'verified';
-    }
-
 
 
 

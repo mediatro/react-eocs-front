@@ -22,6 +22,10 @@ import {OfferConsent} from "./OfferConsent";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 import {PaymentManagerContext} from "../../payments/services/PaymentProvider";
 import {PBox} from "../../../shared/components/PBox";
+import {ProfileEdit} from "./ProfileEdit";
+import {useNewUserFlow} from "../services/NewUserFlow";
+import {NewUserStepper} from "./NewUserStepper";
+import {Compliance} from "./Compliance";
 
 
 export function HomePage(){
@@ -29,6 +33,8 @@ export function HomePage(){
     const authc = useContext(AuthContext);
     const umc = useContext(UserManagerContext);
     const pmc = useContext(PaymentManagerContext);
+
+    const flow = useNewUserFlow();
 
     return (
         <Box>
@@ -41,58 +47,66 @@ export function HomePage(){
                     </Typography>
                 </PBox>
             </> : <>
-                {authc.manager.getUser().id && <>
 
-                    <PBox>
-                        <Typography>
-                            <FormattedMessage id={'auth.field.user.erp_id'}/>: {authc.manager.getUser().erpId}
-                        </Typography>
+                {authc.manager.getUser().id && (
+                    !flow.isEverythingComplete()
+                        ? <NewUserStepper/>
 
-                        {authc.manager.getUser().userType === UserType.PRIVATE_INDIVIDUAL && <Typography>
-                            <FormattedMessage id={'auth.field.user.full_name'}/>: {authc.manager.getUser().firstName} {authc.manager.getUser().lastName}
-                        </Typography>}
-                    </PBox>
+                        : <>
 
-                    {authc.manager.getUser().activePaymentDetail && <PBox>
-                        <Typography variant={'h4'}>
-                            <FormattedMessage id={'payment.field.payment_detail.active'}/>
-                        </Typography>
-
-                        <Typography>
-                            <Typography>{authc.manager.getUser().activePaymentDetail["@id"]} - {authc.manager.getUser().activePaymentDetail.displayString} - {authc.manager.getUser().activePaymentDetail.status}</Typography>
-                        </Typography>
-                    </PBox>}
-
-
-                    {(!authc.manager.getUser().paymentDetails || authc.manager.getUser().paymentDetails.length < 1) &&
-                        <PBox>
-                            <Typography>
-                                <FormattedMessage id={'home.text.payment_details_required'}/>
-                                <Link to={'/payment-details'}><FormattedMessage id={'page.payment_details'}/></Link>
-                            </Typography>
-                        </PBox>
-                    }
-
-                    {!umc.manager.isUserVerified() ? <>
-                        <PBox>
-                            <Typography>
-                                <FormattedMessage id={'home.text.wait_for_verification'}/>
-                            </Typography>
-                        </PBox>
-
-                    </> : <>
-                        {!pmc.manager.isPaymentRequestAvailable() &&
                             <PBox>
                                 <Typography>
-                                    <FormattedMessage id={'home.text.wait_for_payment_details_verification'}/>
+                                    <FormattedMessage id={'auth.field.user.erp_id'}/>: {authc.manager.getUser().erpId}
+                                </Typography>
+
+                                {authc.manager.getUser().userType === UserType.PRIVATE_INDIVIDUAL && <Typography>
+                                    <FormattedMessage id={'auth.field.user.full_name'}/>: {authc.manager.getUser().firstName} {authc.manager.getUser().lastName}
+                                </Typography>}
+                            </PBox>
+
+                            <PBox>
+                                <ProfileEdit/>
+                            </PBox>
+
+
+                            {authc.manager.getUser().activePaymentDetail && <PBox>
+                                <Typography variant={'h4'}>
+                                    <FormattedMessage id={'payment.field.payment_detail.active'}/>
+                                </Typography>
+
+                                <Typography>
+                                    <Typography>{authc.manager.getUser().activePaymentDetail["@id"]} - {authc.manager.getUser().activePaymentDetail.displayString} - {authc.manager.getUser().activePaymentDetail.status}</Typography>
+                                </Typography>
+                            </PBox>}
+
+
+                            {/*{(!authc.manager.getUser().paymentDetails || authc.manager.getUser().paymentDetails.length < 1) &&
+                            <PBox>
+                                <Typography>
+                                    <FormattedMessage id={'home.text.payment_details_required'}/>
+                                    <Link to={'/payment-details'}><FormattedMessage id={'page.payment_details'}/></Link>
                                 </Typography>
                             </PBox>
-                        }
+                            }*/}
 
-                        <OfferConsent/>
-                        <PaymentHistory/>
-                    </>}
-                </>}
+                            {!umc.manager.isUserVerified()
+                                ?
+                                <Compliance/>
+
+                                : <>
+                                    {!pmc.manager.isPaymentRequestAvailable() &&
+                                        <PBox>
+                                            <Typography>
+                                                <FormattedMessage id={'home.text.wait_for_payment_details_verification'}/>
+                                            </Typography>
+                                        </PBox>
+                                    }
+
+                                    <OfferConsent/>
+                                    <PaymentHistory/>
+                                </>}
+                        </>
+                )}
             </>}
         </Box>
     );

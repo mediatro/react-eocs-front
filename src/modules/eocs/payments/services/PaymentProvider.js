@@ -68,6 +68,10 @@ export class PaymentManager extends ApiService {
         return this._fetch(this.config['api.payment_request.path'], 'POST', JSON.stringify(request));
     }
 
+    doPatchPaymentRequest(request){
+        return this._fetch([this.config['api.payment_request.path'], request.requestId].join('/'), 'PATCH', JSON.stringify(request));
+    }
+
     doGetPayments(erpId){
         return this._fetch(`${this.config['api.payment.path']}?detail.user.erpId=${erpId}`, 'GET');
     }
@@ -104,6 +108,16 @@ export class PaymentManager extends ApiService {
         return this.getObserver$({
             queryKey: ['post_payment_request', request],
             queryFn: () => this.doPostPaymentRequest(request)
+        }).pipe(map((v)=>{
+            this.userManagerContext.manager.reloadUser();
+            return v;
+        }));
+    }
+
+    getUpdatePaymentRequestQuery(request){
+        return this.getObserver$({
+            queryKey: ['patch_payment_request', request],
+            queryFn: () => this.doPatchPaymentRequest(request)
         }).pipe(map((v)=>{
             this.userManagerContext.manager.reloadUser();
             return v;

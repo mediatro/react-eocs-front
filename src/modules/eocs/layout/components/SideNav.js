@@ -6,6 +6,7 @@ import {FormattedMessage} from "react-intl";
 import {UserManagerContext} from "../../auth/services/UserManagerProvider";
 import {routes} from "../../../../config/routing";
 import {PaymentManagerContext} from "../../payments/services/PaymentProvider";
+import {useNewUserFlow} from "../../home/services/NewUserFlow";
 
 export function SideNav(props){
 
@@ -13,18 +14,26 @@ export function SideNav(props){
     const authc = useContext(AuthContext);
     const umc = useContext(UserManagerContext);
     const pmc = useContext(PaymentManagerContext);
+    const flow = useNewUserFlow();
 
     const isActive = (routeName) => {
         return location.pathname === routeName;
     }
 
     const isRouteAvailable = (route) => {
+        if(route.menu === false) {
+            return false;
+        }
+
         if(!route.conditions) {
             return true;
         }
 
         if(route.conditions.authed === true){
-            if(route.conditions.verified === true) {
+            if(route.conditions.initiated === true) {
+                return flow.isEverythingComplete();
+            }
+            if (route.conditions.verified === true) {
                 return pmc.manager.isPaymentRequestAvailable();
             }
             return authc.manager.checkAuth();

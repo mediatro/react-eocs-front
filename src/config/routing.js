@@ -4,6 +4,8 @@ import {LogoutPage} from "../modules/eocs/auth/components/LogoutPage";
 import {RegisterPage} from "../modules/eocs/auth/components/RegisterPage";
 import {LoginPage} from "../modules/eocs/auth/components/LoginPage";
 import {HomePage} from "../modules/eocs/home/components/HomePage";
+import {PasswordResetPage} from "../modules/eocs/auth/components/PasswordResetPage";
+import {PaymentRequestConfirmation} from "../modules/eocs/payments/components/PaymentRequestConfirmation";
 
 export const routes = [
     {
@@ -12,10 +14,17 @@ export const routes = [
         component: HomePage,
     },
     {
+        path: '/payment-request-confirmation',
+        message: 'page.payment_request_confirmation',
+        component: PaymentRequestConfirmation,
+        conditions: {authed: true},
+        menu: false,
+    },
+    {
         path: '/payment-details',
         message: 'page.payment_details',
         component: PaymentDetailsPage,
-        conditions: {authed: true},
+        conditions: {authed: true, initiated: true},
     },
     {
         path: '/payment-request',
@@ -34,6 +43,12 @@ export const routes = [
         path: '/login',
         message: 'page.login',
         component: LoginPage,
+        conditions: {authed: false},
+    },
+    {
+        path: '/password-reset',
+        message: 'page.password_reset',
+        component: PasswordResetPage,
         conditions: {authed: false},
     },
 

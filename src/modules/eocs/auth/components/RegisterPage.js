@@ -23,8 +23,8 @@ export function RegisterPage(props){
 
     const intl = useIntl();
     let location = useLocation();
-    const umc = useContext(UserManagerContext);
     const authc = useContext(AuthContext);
+    const umc = useContext(UserManagerContext);
     const fic = useContext(FetchInterceptorContext);
 
     const [erpId, setErpId] = useState(null);
@@ -52,16 +52,13 @@ export function RegisterPage(props){
            fetchPreReg(erpId);
         }else{
             const payload = new FormData();
-            console.log(formValue)
             payload.append("file", formValue.image[0]);
-            console.log(222, payload)
 
             let nv = {...camelize(formValue),
                 erpId: user.erpId,
                 email: user.email,
                 phone: user.phone,
                 userType: userType,
-
             };
 
             umc.manager.getPostImageQuery(payload).pipe(switchMap((v) => {

@@ -1,10 +1,11 @@
 import { Form } from 'react-final-form';
 import { TextField } from 'mui-rff';
-import {Box, Button} from "@mui/material";
+import {Box, Button, Typography} from "@mui/material";
 import {useContext} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FormattedMessage, useIntl} from "react-intl";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
+import {Link} from "react-router-dom";
 
 export function LoginPage(props){
 
@@ -43,6 +44,12 @@ export function LoginPage(props){
                     </form>
                 )}
             />
+
+            <Typography>
+                <Link to={'/password-reset'}>
+                    <FormattedMessage id={'page.password_reset'}/>
+                </Link>
+            </Typography>
         </Box>
     );
 }
