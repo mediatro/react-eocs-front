@@ -1,183 +1,179 @@
 {
   "auth.action.login.submit": {
     "en": "Submit",
-    "ru": "Отправить" 
+    "ru": "Отправить"
   },
+  "auth.action.password_reset.execute": {},
+  "auth.action.password_reset.request": {},
   "auth.action.register.check_prereg": {
     "en": "check_prereg",
-    "ru": "check_prereg" 
+    "ru": "check_prereg"
   },
-  "auth.action.register.consent_confidentiality.open": {
-  },
+  "auth.action.register.consent_confidentiality.open": {},
   "auth.action.register.submit": {
     "en": "Submit",
-    "ru": "Отправить" 
+    "ru": "Отправить"
   },
   "auth.field.user.address": {
     "en": "Address",
-    "ru": "Адрес" 
+    "ru": "Адрес"
   },
   "auth.field.user.birthday": {
     "en": "Date of Birth",
-    "ru": "День рождения" 
+    "ru": "День рождения"
   },
   "auth.field.user.company_reg_number": {
     "en": "Company Registration Number",
-    "ru": "Регистрационный номер" 
+    "ru": "Регистрационный номер"
   },
   "auth.field.user.email": {
     "en": "email",
-    "ru": "email" 
+    "ru": "email"
   },
   "auth.field.user.erp_id": {
     "en": "id",
-    "ru": "id" 
+    "ru": "id"
   },
   "auth.field.user.first_name": {
     "en": "First name",
-    "ru": "Имя" 
+    "ru": "Имя"
   },
   "auth.field.user.full_name": {
     "en": "Last name",
-    "ru": "Фамилия" 
+    "ru": "Фамилия"
   },
+  "auth.field.user.image": {},
   "auth.field.user.last_name": {
     "en": "Full Name of Director or Legal Representative",
-    "ru": "ФИ директора или законного представителя" 
+    "ru": "ФИ директора или законного представителя"
   },
   "auth.field.user.legal_address": {
     "en": "Legal address",
-    "ru": "Юр. адрес" 
+    "ru": "Юр. адрес"
   },
   "auth.field.user.legal_representative_name": {
     "en": "Legal Representative name",
-    "ru": "Имя законного представителя" 
+    "ru": "Имя законного представителя"
   },
   "auth.field.user.password": {
     "en": "password",
-    "ru": "пароль" 
+    "ru": "пароль"
   },
   "auth.field.user.password_repeat": {
     "en": "password repeat",
-    "ru": "повторите пароль" 
+    "ru": "повторите пароль"
   },
   "auth.field.user.phone": {
     "en": "phone",
-    "ru": "телефон" 
+    "ru": "телефон"
   },
   "auth.field.user.user_type": {
     "en": "User type",
-    "ru": "Физ/Юр лицо" 
+    "ru": "Физ/Юр лицо"
   },
   "auth.form.register.consent_confidentiality": {
     "en": "Confidentiality",
-    "ru": "Конфиденциальность" 
+    "ru": "Конфиденциальность"
   },
   "auth.form.register.consent_personal_data": {
     "en": "I confirm my consent to the processing of personal data",
-    "ru": "Подтверждаю свое согласие на обработку персональных данных" 
+    "ru": "Подтверждаю свое согласие на обработку персональных данных"
   },
   "auth.text.consent_confidentiality": {
-    "en": "We may disclose to You certain information as a result of Your participation, which we consider to be confidential (herein referred to as \u201CConfidential Information\u201D). For purposes of this Agreement, the term \u201CConfidential Information\u201D shall include, but not be limited to, any modifications to the terms and provisions of this Agreement, websites, business and financial information relating Company`s customer and vendor lists, relating to Company, pricing and sales information for Company and any executor other than You, activities, correspondence, phone talks, information which is placed on websites and etc. Confidential Information shall also include any information that we designate as confidential during the term of this Agreement.\r\n    You agree not to disclose any Confidential Information and that such Confidential Information shall remain strictly confidential and secret and shall not be utilized, directly or indirectly, by You for Your own business purposes or for any other purpose except and solely to the extent that any such information is generally known or available to the public or if same is required by law or legal process.\r\n    We make no warranty, expressed or implied, with respect to any information delivered hereunder, including implied warranties of merchantability, fitness for a particular purpose or freedom from patent, trademark or copyright infringements, whether arising by law, customer conduct, or as to the accuracy or completeness of the information and we shall not have any liability to You or to any other person resulting from Your or such third person\u2019s use of the information.\r\n    You don`t have the right to give an access to our database and informational resources without our previous written consent.\r\n    The Party that fails to comply with its duties under this Agreement shall indemnify the other Party for losses resulting from disclosure or illegal exploitation of the Confidential Information.\r\n    This Agreement will be governed by the laws of the Republic of Malta. The parties make the maximal efforts to eliminate disagreements by means of negotiations. If disputes can`t be settled by negotiations in 30 (thirty) days after they arose, then they shall be finally settled in the Courts of Malta.\r\n    Correspondence of You and us via e-mail or our internal system is recognized by the parties legally significant and substitute paper correspondence. Any signature delivered by facsimile transmission shall be deemed to have the same legal effect as the actual signature of the person and any Party receiving delivery of a facsimile may rely on such as having actually been signed.",
+    "en": "We may disclose to You certain information as a result of Your participation, which we consider to be confidential (herein referred to as “Confidential Information”). For purposes of this Agreement, the term “Confidential Information” shall include, but not be limited to, any modifications to the terms and provisions of this Agreement, websites, business and financial information relating Company`s customer and vendor lists, relating to Company, pricing and sales information for Company and any executor other than You, activities, correspondence, phone talks, information which is placed on websites and etc. Confidential Information shall also include any information that we designate as confidential during the term of this Agreement.\r\n    You agree not to disclose any Confidential Information and that such Confidential Information shall remain strictly confidential and secret and shall not be utilized, directly or indirectly, by You for Your own business purposes or for any other purpose except and solely to the extent that any such information is generally known or available to the public or if same is required by law or legal process.\r\n    We make no warranty, expressed or implied, with respect to any information delivered hereunder, including implied warranties of merchantability, fitness for a particular purpose or freedom from patent, trademark or copyright infringements, whether arising by law, customer conduct, or as to the accuracy or completeness of the information and we shall not have any liability to You or to any other person resulting from Your or such third person’s use of the information.\r\n    You don`t have the right to give an access to our database and informational resources without our previous written consent.\r\n    The Party that fails to comply with its duties under this Agreement shall indemnify the other Party for losses resulting from disclosure or illegal exploitation of the Confidential Information.\r\n    This Agreement will be governed by the laws of the Republic of Malta. The parties make the maximal efforts to eliminate disagreements by means of negotiations. If disputes can`t be settled by negotiations in 30 (thirty) days after they arose, then they shall be finally settled in the Courts of Malta.\r\n    Correspondence of You and us via e-mail or our internal system is recognized by the parties legally significant and substitute paper correspondence. Any signature delivered by facsimile transmission shall be deemed to have the same legal effect as the actual signature of the person and any Party receiving delivery of a facsimile may rely on such as having actually been signed.",
     "ru": "Компания раскрывает Исполнителю определенную информацию, ввиду его участия в работе Компании, которую Компания считает конфиденциальной (далее именуемой \"Конфиденциальная информация\"). В целях настоящего Договора понятие \"Конфиденциальная информация\" включает, не ограничиваясь, любые изменения условий и положений данного Договора, сайтов, деловой и финансовой информации, связанной со списками клиентов и поставщиков, связанных с Компанией, информацию о ценах и продажах для Компании и любого другого исполнителя, о деятельности, корреспонденции, телефонных разговорах, информацию, размещенную на сайтах и т. д. Конфиденциальная информация также включает любые сведения, которые Компания считает конфиденциальными в течение срока действия настоящего Договора.\n    Исполнитель соглашается не раскрывать любую Конфиденциальную информацию, и признает, что такая Конфиденциальная информация должна оставаться в строгом секрете и не должна использоваться, напрямую или косвенно, Исполнителем или для нужд его собственного бизнеса, или для любых иных целей, за исключением тех случаев и в той мере, когда любая такая информация известна или доступна широкой публике, или если это требуется законом или судебным процессом.\n    Компания не дает никакой гарантии, явной или неявной, в отношении какой-либо информации, предоставленной в силу настоящего Договора, включая подразумеваемые гарантии коммерческой ценности, пригодности для определенной цели или отсутствия нарушений связанных с патентами, торговыми марками или авторскими правами, либо возникающими в силу закона, поведения клиентов, либо в силу точности и полноты информации. Причем Компания не несет никакой ответственности перед Исполнителем или иными лицами, возникающей в связи с пользованием информацией Исполнителем или иным третьим лицом.\n    Исполнителю запрещается давать доступ к базе данных Компании и к ее информационным ресурсам без ее предварительного письменного согласия."
   },
-  "auth.text.register.request_prereg": {
-  },
-  "auth.title.consent_confidentiality": {
-  },
-  "home.action.offer_consent.open_dialog": {
-  },
-  "home.text.offer_consent_required": {
-  },
-  "home.text.offer_consent_review": {
-  },
-  "home.text.payment_details_required": {
-    "en": "Payment details required",
-    "ru": "Заполните платежные реквизиты"  
-  },
+  "auth.text.password_reset.execute.instructions": {},
+  "auth.text.password_reset.execute.success": {},
+  "auth.text.password_reset.instructions": {},
+  "auth.text.password_reset.request.success": {},
+  "auth.text.profile": {},
+  "auth.text.register.request_prereg": {},
+  "auth.title.consent_confidentiality": {},
+  "home.action.offer_consent.required": {},
+  "home.action.offer_consent.review": {},
+  "home.text.offer_consent.title": {},
   "home.text.wait_for_payment_details_verification": {
     "en": "Payment details awaiting verification",
-    "ru": "Платежные реквизиты на проверке"  
+    "ru": "Платежные реквизиты на проверке"
   },
   "home.text.wait_for_verification": {
     "en": "awaiting compliance",
-    "ru": "Идет процедура комплаенс"   
+    "ru": "Идет процедура комплаенс"
   },
   "home.text.welcome.0": {
     "en": "Welcome future partner.",
-    "ru": "Добро пожаловать"   
+    "ru": "Добро пожаловать"
   },
   "home.text.welcome.1": {
     "en": "To enter you need to register",
-    "ru": "Для начала работы зарегистрируйтесь"   
+    "ru": "Для начала работы зарегистрируйтесь"
   },
   "location.field.city": {
     "en": "City",
-    "ru": "Город"   
+    "ru": "Город"
   },
   "location.field.country": {
     "en": "Country",
-    "ru": "Страна"   
+    "ru": "Страна"
   },
-  "page.payment_details": {
-    "en": "Payment details",
-    "ru": "Платежные реквизиты"   
-  },
+  "page.login": {},
+  "page.password_reset": {},
   "page.register": {
     "en": "Registration",
-    "ru": "Регистрация"   
+    "ru": "Регистрация"
   },
   "payment.action.details_create": {
     "en": "Create",
-    "ru": "Создать" 
+    "ru": "Создать"
   },
   "payment.action.invoice_request": {
     "en": "Create",
-    "ru": "Создать" 
+    "ru": "Создать"
   },
   "payment.action.payment_request.submit": {
     "en": "Submit",
-    "ru": "Отправить" 
+    "ru": "Отправить"
   },
   "payment.field.amount": {
     "en": "Amount",
-    "ru": "Сумма" 
+    "ru": "Сумма"
   },
   "payment.field.crypto.platform": {
     "en": "Platform name",
-    "ru": "Название платформы" 
+    "ru": "Название платформы"
   },
   "payment.field.crypto.wallet_number": {
     "en": "Wallet_number",
-    "ru": "Эл. кошелек" 
+    "ru": "Эл. кошелек"
   },
   "payment.field.currency": {
     "en": "Currency",
-    "ru": "Валюта" 
+    "ru": "Валюта"
   },
   "payment.field.date": {
     "en": "Date",
-    "ru": "Дата" 
+    "ru": "Дата"
   },
   "payment.field.detail": {
     "en": "Detail",
-    "ru": "Детали" 
+    "ru": "Детали"
   },
   "payment.field.method": {
     "en": "Method",
-    "ru": "Метод выплаты" 
+    "ru": "Метод выплаты"
   },
   "payment.field.oct.card_expiry": {
     "en": "Card expiry",
-    "ru": "Срок действия" 
+    "ru": "Срок действия"
   },
   "payment.field.oct.card_holder_name": {
     "en": "Card holder name",
-    "ru": "Владелец карты" 
+    "ru": "Владелец карты"
   },
   "payment.field.oct.card_number": {
     "en": "Card number",
-    "ru": "Номер карты" 
+    "ru": "Номер карты"
   },
   "payment.field.payment_detail.active": {
     "en": "Active",
@@ -203,6 +199,8 @@
     "en": "Wallet number/email",
     "ru": "Эл. кошелек"
   },
+  "payment.field.site": {},
+  "payment.field.status": {},
   "payment.field.wire.account_holder_name": {
     "en": "Account holder name",
     "ru": "Владелец счета"
@@ -223,8 +221,8 @@
     "en": "SWIFT",
     "ru": "SWIFT"
   },
-  "payment.text.no_payments_yet": {
-  },
+  "payment.text.no_payment_requests_yet": {},
+  "payment.text.no_payments_yet": {},
   "payment.text.payment_detail.create": {
     "en": "Create",
     "ru": "Create"
@@ -241,10 +239,12 @@
     "en": "backup payment details",
     "ru": "Резервные платежные реквизиты"
   },
+  "payment.text.payment_history": {},
   "payment.text.payment_request.blocked": {
     "en": "Blocked",
     "ru": "Недоступно"
   },
+  "payment.text.payment_request.create": {},
   "payment.text.payment_requests.active": {
     "en": "Active",
     "ru": "Активны"
@@ -260,5 +260,13 @@
   "user.field.site": {
     "en": "Project",
     "ru": "Проект"
+  },
+  "home.text.payment_details_required": {
+    "en": "Payment details required",
+    "ru": "Заполните платежные реквизиты"
+  },
+  "page.payment_details": {
+    "en": "Payment details",
+    "ru": "Платежные реквизиты"
   }
 }
