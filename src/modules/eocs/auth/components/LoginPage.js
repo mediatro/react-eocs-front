@@ -1,11 +1,14 @@
 import { Form } from 'react-final-form';
 import { TextField } from 'mui-rff';
-import {Box, Button, Typography} from "@mui/material";
+import {Box, Button, FormControlLabel, Grid, Typography} from "@mui/material";
 import {useContext} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FormattedMessage, useIntl} from "react-intl";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 import {Link} from "react-router-dom";
+import {ButtonSubmit} from "../../../shared/components/ButtonSubmit";
+import {ContainerSmall} from "../../../shared/components/ContainerSmall";
+import {TH1} from "../../../shared/components/TH1";
 
 export function LoginPage(props){
 
@@ -18,38 +21,50 @@ export function LoginPage(props){
     };
 
     return (
-        <Box sx={{width: 300}}>
+        <ContainerSmall>
+            <TH1>
+                <FormattedMessage id={'page.login'}/>
+            </TH1>
+
             <Form
                 onSubmit={onSubmit}
                 render={({ handleSubmit, values }) => (
-                    <form onSubmit={handleSubmit}>
+                    <Box component="form" onSubmit={handleSubmit}>
                         <TextField name="username"
                                    label={intl.formatMessage({id: 'auth.field.user.email'})}
                                    required={true}
+                                   autoComplete="email"
+                                   fullWidth
+                                   sx={{ mt: 2 }}
                         />
                         <TextField type="password"
                                    name="password"
                                    label={intl.formatMessage({id: 'auth.field.user.password'})}
                                    required={true}
+                                   autoComplete="current-password"
+                                   fullWidth
+                                   sx={{ mt: 2 }}
                         />
 
-                        <Box mt={2}>
-                            <Button type="submit"
-                                    variant="contained"
-                                    disabled={fic.loading}
-                            >
-                                <FormattedMessage id={'auth.action.login.submit'}/>
-                            </Button>
-                        </Box>
-                    </form>
+                        <ButtonSubmit>
+                            <FormattedMessage id={'auth.action.login.submit'}/>
+                        </ButtonSubmit>
+
+                        <Grid container>
+                            <Grid item xs>
+                                <Link to={'/password-reset'} variant="body2">
+                                    <FormattedMessage id={'page.password_reset'}/>
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link to={'/register'} variant="body2">
+                                    <FormattedMessage id={'page.register'}/>
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </Box>
                 )}
             />
-
-            <Typography>
-                <Link to={'/password-reset'}>
-                    <FormattedMessage id={'page.password_reset'}/>
-                </Link>
-            </Typography>
-        </Box>
+        </ContainerSmall>
     );
 }

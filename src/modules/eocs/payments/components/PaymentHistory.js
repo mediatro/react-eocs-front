@@ -15,7 +15,9 @@ import {PaymentManagerContext} from "../services/PaymentProvider";
 import {FormattedMessage, useIntl} from "react-intl";
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import camelize from "camelize";
-import {PBox} from "../../../shared/components/PBox";
+import {SPaper} from "../../../shared/components/SPaper";
+import {TCardTitle} from "../../../shared/components/TCardTitle";
+import {MessageDefault} from "../../../shared/components/MessageDefault";
 
 export function PaymentHistory(){
 
@@ -45,43 +47,49 @@ export function PaymentHistory(){
     }
 
     return (
-        paymentHistory !== null &&
-            paymentHistory.length > 0
-                ? <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell><FormattedMessage id={'payment.field.date'}/></TableCell>
-                                <TableCell align="right"><FormattedMessage id={'payment.field.amount'}/></TableCell>
-                                <TableCell align="right"><FormattedMessage id={'payment.field.currency'}/></TableCell>
-                                <TableCell align="right"><FormattedMessage id={'payment.field.method'}/></TableCell>
-                                <TableCell align="right"><FormattedMessage id={'payment.field.detail'}/></TableCell>
-                                <TableCell align="right"><FormattedMessage id={'payment.action.invoice_request'}/></TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {paymentHistory.map((row) => (
-                                <TableRow>
-                                    <TableCell component="th" scope="row">{new Date(row.updatedAt).toLocaleDateString()}</TableCell>
-                                    <TableCell align="right">{row.amount}</TableCell>
-                                    <TableCell align="right">{row.detail.currency}</TableCell>
-                                    <TableCell align="right">{row.detail.method}</TableCell>
-                                    <TableCell align="right">{row.detail.displayString}</TableCell>
-                                    <TableCell align="right">
-                                        <IconButton onClick={() => handleRequestInvoice(row)}>
-                                            <RequestQuoteIcon/>
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+        <SPaper>
+            <TCardTitle>
+                <FormattedMessage id={'payment.text.payment_history'}/>
+            </TCardTitle>
 
-            : <PBox>
-                <Typography>
-                    <FormattedMessage id={'payment.text.no_payments_yet'}/>
-                </Typography>
-            </PBox>
+            {paymentHistory !== null && paymentHistory.length > 0
+                ?
+                    <TableContainer>
+                        <Table sx={{minWidth: 650}}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell><FormattedMessage id={'payment.field.date'}/></TableCell>
+                                    <TableCell align="right"><FormattedMessage id={'payment.field.amount'}/></TableCell>
+                                    <TableCell align="right"><FormattedMessage id={'payment.field.currency'}/></TableCell>
+                                    <TableCell align="right"><FormattedMessage id={'payment.field.method'}/></TableCell>
+                                    <TableCell align="right"><FormattedMessage id={'payment.field.detail'}/></TableCell>
+                                    <TableCell align="right"><FormattedMessage id={'payment.action.invoice_request'}/></TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {paymentHistory.map((row) => (
+                                    <TableRow>
+                                        <TableCell component="th"
+                                                   scope="row">{new Date(row.updatedAt).toLocaleDateString()}</TableCell>
+                                        <TableCell align="right">{row.amount}</TableCell>
+                                        <TableCell align="right">{row.detail.currency}</TableCell>
+                                        <TableCell align="right">{row.detail.method}</TableCell>
+                                        <TableCell align="right">{row.detail.displayString}</TableCell>
+                                        <TableCell align="right">
+                                            <IconButton color={'primary'} onClick={() => handleRequestInvoice(row)}>
+                                                <RequestQuoteIcon/>
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                :
+                    <MessageDefault>
+                        <FormattedMessage id={'payment.text.no_payments_yet'}/>
+                    </MessageDefault>
+            }
+        </SPaper>
     );
 }

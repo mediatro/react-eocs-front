@@ -44,12 +44,12 @@ export class NewUserFlow {
         const availableSiteRecords = this.getUser().availableSiteRecords;
         if(availableSiteRecords){
             for(let record of availableSiteRecords){
-                if(record && !record.consented){
-                    return false;
+                if(record && record.consented){
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     getActiveStepNumber(){

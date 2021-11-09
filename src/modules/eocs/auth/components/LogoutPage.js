@@ -1,6 +1,6 @@
 import {useContext} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
-import {Box, Button} from "@mui/material";
+import {Box, Button, Typography} from "@mui/material";
 
 export function LogoutPage(props){
 
@@ -9,8 +9,8 @@ export function LogoutPage(props){
     authc.manager.logout();
 
     return (
-        <Box sx={{width: 300}}>
+        <Typography>
             Logging out...
-        </Box>
+        </Typography>
     );
 }

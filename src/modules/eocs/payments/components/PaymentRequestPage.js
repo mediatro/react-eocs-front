@@ -1,4 +1,4 @@
-import {Box, Button, Paper, Typography} from "@mui/material";
+import {Box, Button, Grid, Paper, Typography} from "@mui/material";
 import {FormattedMessage, useIntl} from "react-intl";
 import {Link, useLocation} from "react-router-dom";
 import {Form} from "react-final-form";
@@ -10,6 +10,13 @@ import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 import {ActivePaymentRequests} from "./ActivePaymentRequests";
 import {OnChange} from "react-final-form-listeners";
+import {ContainerSmall} from "../../../shared/components/ContainerSmall";
+import {SPaper} from "../../../shared/components/SPaper";
+import {ButtonSubmit} from "../../../shared/components/ButtonSubmit";
+import {MessageWarning} from "../../../shared/components/MessageWarning";
+import {ContainerMid} from "../../../shared/components/ContainerMid";
+import {TCardTitle} from "../../../shared/components/TCardTitle";
+import {TKeyValue} from "../../../shared/components/TKeyValue";
 
 export function PaymentRequestPage(){
 
@@ -40,42 +47,52 @@ export function PaymentRequestPage(){
     }
 
     return (
-        <Box sx={{width: 400}}>
+        <ContainerMid>
+            <Grid item xs md={6}>
+                <SPaper>
+                    <TCardTitle>
+                        <FormattedMessage id={'payment.text.payment_request.create'}/>
+                    </TCardTitle>
 
-            {authc.manager.getUser().activePaymentRequests && authc.manager.getUser().activePaymentRequests.length > 0 && <ActivePaymentRequests/>}
 
-            <Paper>
-                <Box p={1} m={1}>
+
                     {pmc.manager.isPaymentRequestBlocked() ? <>
-                        <Typography>
-                            <FormattedMessage id={'payment.text.payment_request.blocked'}/><br/>
+                        <MessageWarning>
+                            <Typography variant={'h6'}>
+                                <FormattedMessage id={'payment.text.payment_request.blocked'}/>
+                            </Typography>
                             <FormattedMessage id={`payment.text.payment_request.blocked.${pmc.manager.isPaymentRequestBlocked()}`}/>
-                        </Typography>
+                        </MessageWarning>
+
                     </> : <>
-                        <Typography><FormattedMessage id={'payment.field.payment_detail.limit'}/> (USD):</Typography>
-                        <Typography>{getActivePaymentDetail() ? getActivePaymentDetail().payLimit : '-'}</Typography>
+                        <TKeyValue
+                            tkey={<><FormattedMessage id={'payment.field.payment_detail.limit'}/>(USD)</>}
+                            value={getActivePaymentDetail() ? getActivePaymentDetail().payLimit : '0'}
+                        />
 
                         <Form
                             onSubmit={onSubmit}
                             render={({ handleSubmit, values }) => (
                                 <form onSubmit={handleSubmit}>
-
-                                    <Select name="site"
-                                            label={intl.formatMessage({id: "user.field.site"})}
-                                            required={true}
-                                            value={site}
-                                            onChange={(e)=> {setSite(e.target.value)}}
-                                            data={getAvailableSiteRecords().map(record => ({
-                                                label: record.site.name,
-                                                value: record
-                                            }))}
-                                    />
+                                    <Box sx={{ mt: 1, mb: 1 }}>
+                                        <Select name="site"
+                                                label={intl.formatMessage({id: "user.field.site"})}
+                                                required={true}
+                                                value={site}
+                                                onChange={(e)=> {setSite(e.target.value)}}
+                                                data={getAvailableSiteRecords().map(record => ({
+                                                    label: record.site.name,
+                                                    value: record
+                                                }))}
+                                        />
+                                    </Box>
 
                                     <TextField name="amount" type={'number'}
                                                label={intl.formatMessage({id: "payment.field.amount"})}
                                                required={true}
                                                value={amount}
                                                inputProps={{ inputMode: 'numeric' }}
+                                               sx={{ mt: 1, mb: 1 }}
                                     />
                                     <OnChange name="amount">
                                         {(value, previous) => {
@@ -83,20 +100,19 @@ export function PaymentRequestPage(){
                                         }}
                                     </OnChange>
 
-                                    <Box mt={2}>
-                                        <Button type="submit"
-                                                variant="contained"
-                                                disabled={fic.loading}
-                                        >
-                                            <FormattedMessage id={'payment.action.payment_request.submit'}/>
-                                        </Button>
-                                    </Box>
+                                    <ButtonSubmit>
+                                        <FormattedMessage id={'payment.action.payment_request.submit'}/>
+                                    </ButtonSubmit>
                                 </form>
                             )}
                         />
                     </>}
-                </Box>
-            </Paper>
-        </Box>
+                </SPaper>
+            </Grid>
+
+            <Grid item xs md={12}>
+                <ActivePaymentRequests/>
+            </Grid>
+        </ContainerMid>
     );
 }

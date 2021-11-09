@@ -166,7 +166,8 @@ export class PaymentManager extends ApiService {
         let requests = this.getUser().activePaymentRequests;
         if(requests){
             for(let r of requests){
-                if(r.status === 'new') {
+                console.log(22, r.status);
+                if(['new', 'in-progress'].includes(r.status)) {
                     return BlockReason.REQUEST_ACTIVE;
                 }else{
                     return BlockReason.REQUEST_TOO_SOON;

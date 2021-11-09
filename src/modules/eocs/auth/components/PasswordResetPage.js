@@ -7,6 +7,11 @@ import {UserManagerContext} from "../services/UserManagerProvider";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 import {switchMap} from "rxjs/operators";
 import {Link, useLocation} from "react-router-dom";
+import {TH1} from "../../../shared/components/TH1";
+import {ContainerSmall} from "../../../shared/components/ContainerSmall";
+import {ButtonSubmit} from "../../../shared/components/ButtonSubmit";
+import {TSubtitle1} from "../../../shared/components/TSubtitle1";
+import {MessageSuccess} from "../../../shared/components/MessageSuccess";
 
 export function PasswordResetPage(){
 
@@ -48,33 +53,40 @@ export function PasswordResetPage(){
     const renderRequest = () => (
         success
             ?
-                <Typography>
+                <MessageSuccess>
                     <FormattedMessage id={'auth.text.password_reset.request.success'}/>
-                </Typography>
-            :<>
-                <Typography>
-                    <FormattedMessage id={'auth.text.password_reset.request.instructions'}/>
-                </Typography>
+                </MessageSuccess>
+            :
+
+            <ContainerSmall>
+                <TH1>
+                    <FormattedMessage id={'page.password_reset'}/>
+                </TH1>
+
+                <TSubtitle1>
+                    <FormattedMessage id={'auth.text.password_reset.instructions'}/>
+                </TSubtitle1>
 
                 <Form
                     onSubmit={onSubmit}
                     render={({ handleSubmit, values }) => (
-                        <form onSubmit={handleSubmit}>
+                        <Box component="form" onSubmit={handleSubmit}>
                             <TextField  type={'email'}
                                         name="email"
                                         label={intl.formatMessage( {id: "auth.field.user.email"})}
                                         required={true}
+                                        autoComplete="email"
+                                        fullWidth
+                                        sx={{ mt: 2 }}
                             />
 
-                            <Button type="submit"
-                                    disabled={fic.loading}
-                            >
+                            <ButtonSubmit>
                                 <FormattedMessage id={'auth.action.password_reset.request'}/>
-                            </Button>
-                        </form>
+                            </ButtonSubmit>
+                        </Box>
                     )}
                 />
-            </>
+            </ContainerSmall>
     );
 
     const renderExecute = () => (

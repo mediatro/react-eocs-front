@@ -2,11 +2,12 @@ import {Box, IconButton, List, ListItem, ListItemText, Paper, Typography} from "
 import {FormattedMessage} from "react-intl";
 import {useContext} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
-import {PBox} from "../../../shared/components/PBox";
+import {SPaper} from "../../../shared/components/SPaper";
 import LoopIcon from '@mui/icons-material/Loop';
 import {PaymentManagerContext} from "../services/PaymentProvider";
+import {TCardTitle} from "../../../shared/components/TCardTitle";
 
-export function ActivePaymentDetail(){
+export function PaymentDetailsList(){
 
     const authc = useContext(AuthContext);
     const pmc = useContext(PaymentManagerContext);
@@ -21,13 +22,13 @@ export function ActivePaymentDetail(){
     const getListAction = (detail) => (
         authc.manager.getUser().activePaymentDetail && authc.manager.getUser().activePaymentDetail['@id'] === detail['@id']
             ?
-                <Typography>
+                <Typography color={'green'}>
                     <FormattedMessage id={'payment.field.payment_detail.active'}/>
                 </Typography>
             :
                 detail.status === 'verified'
                     ?
-                        <IconButton onClick={() => activateDetail(detail)}>
+                        <IconButton color={'primary'} onClick={() => activateDetail(detail)}>
                             <LoopIcon/>
                         </IconButton>
                     :
@@ -35,10 +36,10 @@ export function ActivePaymentDetail(){
     );
 
     return (
-        <PBox>
-            <Typography variant={'h4'}>
+        <SPaper>
+            <TCardTitle>
                 <FormattedMessage id={'payment.text.payment_detail.list'}/>
-            </Typography>
+            </TCardTitle>
 
             <List>
                 {authc.manager.getUser().paymentDetails.slice(0).reverse().map((detail, i) => (
@@ -49,6 +50,6 @@ export function ActivePaymentDetail(){
                     </ListItem>
                 ))}
             </List>
-        </PBox>
+        </SPaper>
     );
 }

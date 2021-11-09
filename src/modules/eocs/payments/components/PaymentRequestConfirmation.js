@@ -1,6 +1,6 @@
 import {useContext, useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
-import {PBox} from "../../../shared/components/PBox";
+import {SPaper} from "../../../shared/components/SPaper";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {switchMap, NEVER, take} from "rxjs";
 import {PaymentManagerContext} from "../services/PaymentProvider";

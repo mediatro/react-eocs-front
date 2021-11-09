@@ -1,11 +1,12 @@
 import {FormattedMessage, useIntl} from "react-intl";
-import {Box, Button, Typography} from "@mui/material";
+import {Box, Button, List, ListItem, ListItemText, Typography} from "@mui/material";
 import {AgreeDialog, useAgreeDialog} from "../../../shared/components/AgreeDialog";
 import parse from "html-react-parser";
 import {useContext, useEffect} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {UserManagerContext} from "../../auth/services/UserManagerProvider";
-import {PBox} from "../../../shared/components/PBox";
+import {SPaper} from "../../../shared/components/SPaper";
+import {TCardTitle} from "../../../shared/components/TCardTitle";
 
 const DialogTypes = {
     OFFER: 'offer',
@@ -32,29 +33,53 @@ export function OfferConsent(){
         }
     }, [availableSiteRecords, JSON.stringify(checked)]);
 
+    const getListAction = (record) => {
+        return (
+            umc.manager.isActiveOfferConfirmed(record)
+                ?
+                    <Button color={'primary'}
+                            onClick={() => handleAgreeDialogOpen(record['@id'])}
+                    >
+                        <FormattedMessage id={'home.action.offer_consent.review'}/>
+                    </Button>
+                :
+                    <Button color={'warning'}
+                            onClick={() => handleAgreeDialogOpen(record['@id'])}
+                    >
+                        <FormattedMessage id={'home.action.offer_consent.required'}/>
+                    </Button>
+        );
+    }
+
     return(
-        <Box>
+        <SPaper>
+            <TCardTitle>
+                <FormattedMessage id={'home.text.offer_consent.title'}/>
+            </TCardTitle>
+
+            <List>
             {user.availableSiteRecords.map(record => (
-                record && <PBox>
-                    <Typography>{record.site.name}</Typography>
+                record &&
+                    <ListItem secondaryAction={getListAction(record)}>
+                        <ListItemText>
+                            {record.site.name}
+                        </ListItemText>
 
-                    <Typography>
-                        {!umc.manager.isActiveOfferConfirmed(record)
-                            ? <FormattedMessage id={'home.text.offer_consent_required'}/>
-                            : <FormattedMessage id={'home.text.offer_consent_review'}/>
-                        }
-                    </Typography>
 
-                    <Button
-                        onClick={() => handleAgreeDialogOpen(record['@id'])}>{intl.formatMessage({id: "home.action.offer_consent.open_dialog"})}</Button>
+                        <Typography style={{display: 'inline'}} variant={'body2'}>
 
-                    <AgreeDialog title={record.offer?.title}
-                                 body={parse(record.offer?.body)}
-                                 open={open === record['@id']}
-                                 handleClose={handleAgreeDialogClose(record['@id'])}
-                    />
-                </PBox>
+                        </Typography>
+
+
+
+                        <AgreeDialog title={record.offer?.title}
+                                     body={parse(record.offer?.body)}
+                                     open={open === record['@id']}
+                                     handleClose={handleAgreeDialogClose(record['@id'])}
+                        />
+                    </ListItem>
             ))}
-        </Box>
+            </List>
+        </SPaper>
     );
 }

@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+
+.MuiPhoneNumber-flagButton{
+  max-width: 10px !important;
+}

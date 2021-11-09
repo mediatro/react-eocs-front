@@ -1,4 +1,3 @@
-import {List, ListItem, ListItemIcon, ListItemText, MenuItem, MenuList} from "@material-ui/core";
 import {useContext, useEffect} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {Link, useLocation} from "react-router-dom";
@@ -7,6 +6,7 @@ import {UserManagerContext} from "../../auth/services/UserManagerProvider";
 import {routes} from "../../../../config/routing";
 import {PaymentManagerContext} from "../../payments/services/PaymentProvider";
 import {useNewUserFlow} from "../../home/services/NewUserFlow";
+import {List, ListItem, ListItemIcon, ListItemText, MenuItem, MenuList} from "@mui/material";
 
 export function SideNav(props){
 

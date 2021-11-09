@@ -1,4 +1,4 @@
-import {Box, Button, Paper, Typography} from "@mui/material";
+import {Box, Button, Grid, Paper, Typography} from "@mui/material";
 import {FormattedMessage, useIntl} from "react-intl";
 import {Link} from "react-router-dom";
 import {Field, Form} from "react-final-form";
@@ -19,9 +19,11 @@ import {UserManagerContext} from "../../auth/services/UserManagerProvider";
 import camelize from "camelize";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
-import {ActivePaymentDetail} from "./ActivePaymentDetail";
-import {PBox} from "../../../shared/components/PBox";
+import {PaymentDetailsList} from "./PaymentDetailsList";
+import {SPaper} from "../../../shared/components/SPaper";
 import {PaymentDetailsForm} from "./PaymentDetailsForm";
+import {MessageWarning} from "../../../shared/components/MessageWarning";
+import {ContainerMid} from "../../../shared/components/ContainerMid";
 
 export function PaymentDetailsPage(){
 
@@ -33,26 +35,14 @@ export function PaymentDetailsPage(){
 
 
     return (
-        <Box style={{width: 600}}>
+        <ContainerMid>
+            <Grid item xs md={6}>
+                {authc.manager.getUser().paymentDetails && <PaymentDetailsList/>}
+            </Grid>
 
-            {authc.manager.getUser().paymentDetails && <ActivePaymentDetail/>}
-
-            {pmc.manager.isPaymentDetailsBlocked() && <PBox>
-                <Typography>
-                    <FormattedMessage id={'payment.text.payment_details.blocked'}/>
-                </Typography>
-                <Typography>
-                    <FormattedMessage id={`payment.text.payment_details.blocked.${pmc.manager.isPaymentDetailsBlocked()}`}/>
-                </Typography>
-            </PBox>}
-
-            {pmc.manager.getAvailablePriorities().length === 1 && pmc.manager.getAvailablePriorities()[0] == Priority.SECONDARY && <PBox>
-                <Typography>
-                    <FormattedMessage id={'payment.text.payment_details.secondary_only'}/>
-                </Typography>
-            </PBox>}
-
-            <PaymentDetailsForm/>
-        </Box>
+            <Grid item xs>
+                <PaymentDetailsForm/>
+            </Grid>
+        </ContainerMid>
     );
 }

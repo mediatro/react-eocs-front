@@ -1,6 +1,6 @@
 import {FormattedMessage, useIntl} from "react-intl";
 import {
-    Box, Button,
+    Box, Button, Grid,
     MenuItem,
     Paper,
     Select,
@@ -12,7 +12,7 @@ import {
     TableRow, Typography
 } from "@mui/material";
 import {Link} from "react-router-dom";
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {PaymentHistory} from "../../payments/components/PaymentHistory";
 import {UserManagerContext, UserType} from "../../auth/services/UserManagerProvider";
@@ -21,11 +21,17 @@ import parse from 'html-react-parser';
 import {OfferConsent} from "./OfferConsent";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 import {PaymentManagerContext} from "../../payments/services/PaymentProvider";
-import {PBox} from "../../../shared/components/PBox";
-import {ProfileEdit} from "./ProfileEdit";
+import {SPaper} from "../../../shared/components/SPaper";
+import {Profile} from "../../auth/components/Profile";
 import {useNewUserFlow} from "../services/NewUserFlow";
 import {NewUserStepper} from "./NewUserStepper";
 import {Compliance} from "./Compliance";
+import {ContainerSmall} from "../../../shared/components/ContainerSmall";
+import {TH1} from "../../../shared/components/TH1";
+import {TSubtitle1} from "../../../shared/components/TSubtitle1";
+import {TCardTitle} from "../../../shared/components/TCardTitle";
+import {MessageWarning} from "../../../shared/components/MessageWarning";
+import {ContainerMid} from "../../../shared/components/ContainerMid";
 
 
 export function HomePage(){
@@ -36,51 +42,76 @@ export function HomePage(){
 
     const flow = useNewUserFlow();
 
+
+
+
     return (
-        <Box>
-            {!authc.manager.getUser() ? <>
-                <PBox>
-                    <Typography>
-                        <FormattedMessage id={'home.text.welcome.0'}/><br/>
-                        <FormattedMessage id={'home.text.welcome.1'}/><br/>
-                        <Link to={'/register'}><FormattedMessage id={'page.register'}/></Link>
-                    </Typography>
-                </PBox>
+
+            !authc.manager.getUser() ? <>
+                <ContainerSmall>
+                    <TH1>
+                        <FormattedMessage id={'home.text.welcome.0'}/>
+                    </TH1>
+
+                    <TSubtitle1>
+                        <FormattedMessage id={'home.text.welcome.1'}/>
+                    </TSubtitle1>
+
+                    <Link to={'/register'}>
+                        <FormattedMessage id={'page.register'}/>
+                    </Link>
+                </ContainerSmall>
             </> : <>
 
                 {authc.manager.getUser().id && (
                     !flow.isEverythingComplete()
                         ? <NewUserStepper/>
 
-                        : <>
+                        :
+                            <ContainerMid>
 
-                            <PBox>
-                                <Typography>
-                                    <FormattedMessage id={'auth.field.user.erp_id'}/>: {authc.manager.getUser().erpId}
-                                </Typography>
+                                <Grid item xs md={6}>
+                                    <SPaper>
+                                        <Profile/>
+                                    </SPaper>
+                                </Grid>
 
-                                {authc.manager.getUser().userType === UserType.PRIVATE_INDIVIDUAL && <Typography>
-                                    <FormattedMessage id={'auth.field.user.full_name'}/>: {authc.manager.getUser().firstName} {authc.manager.getUser().lastName}
-                                </Typography>}
-                            </PBox>
+                                <Grid item xs>
 
-                            <PBox>
-                                <ProfileEdit/>
-                            </PBox>
+                                    {authc.manager.getUser().activePaymentDetail && <SPaper>
+                                        <TCardTitle>
+                                            <FormattedMessage id={'payment.field.payment_detail.active'}/>
+                                        </TCardTitle>
+
+                                        {!pmc.manager.isPaymentRequestAvailable() &&
+                                            <MessageWarning>
+                                                <FormattedMessage id={'home.text.wait_for_payment_details_verification'}/>
+                                            </MessageWarning>
+                                        }
+
+                                        <Typography>
+                                            <Typography>{authc.manager.getUser().activePaymentDetail["@id"]} - {authc.manager.getUser().activePaymentDetail.displayString} - {authc.manager.getUser().activePaymentDetail.status}</Typography>
+                                        </Typography>
+                                    </SPaper>}
+                                </Grid>
+
+                                {!umc.manager.isUserVerified()
+                                    ?
+                                        <Compliance/>
+                                    :
+                                        <>
+                                            <Grid item xs md={6}>
+                                                <OfferConsent/>
+                                            </Grid>
+
+                                            <Grid item xs md={12}>
+                                                <PaymentHistory/>
+                                            </Grid>
+                                        </>
+                                }
 
 
-                            {authc.manager.getUser().activePaymentDetail && <PBox>
-                                <Typography variant={'h4'}>
-                                    <FormattedMessage id={'payment.field.payment_detail.active'}/>
-                                </Typography>
-
-                                <Typography>
-                                    <Typography>{authc.manager.getUser().activePaymentDetail["@id"]} - {authc.manager.getUser().activePaymentDetail.displayString} - {authc.manager.getUser().activePaymentDetail.status}</Typography>
-                                </Typography>
-                            </PBox>}
-
-
-                            {/*{(!authc.manager.getUser().paymentDetails || authc.manager.getUser().paymentDetails.length < 1) &&
+                                {/*{(!authc.manager.getUser().paymentDetails || authc.manager.getUser().paymentDetails.length < 1) &&
                             <PBox>
                                 <Typography>
                                     <FormattedMessage id={'home.text.payment_details_required'}/>
@@ -88,26 +119,9 @@ export function HomePage(){
                                 </Typography>
                             </PBox>
                             }*/}
-
-                            {!umc.manager.isUserVerified()
-                                ?
-                                <Compliance/>
-
-                                : <>
-                                    {!pmc.manager.isPaymentRequestAvailable() &&
-                                        <PBox>
-                                            <Typography>
-                                                <FormattedMessage id={'home.text.wait_for_payment_details_verification'}/>
-                                            </Typography>
-                                        </PBox>
-                                    }
-
-                                    <OfferConsent/>
-                                    <PaymentHistory/>
-                                </>}
-                        </>
+                            </ContainerMid>
                 )}
-            </>}
-        </Box>
+            </>
+
     );
 }

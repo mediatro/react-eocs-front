@@ -8,6 +8,8 @@ import {OfferConsent} from "./OfferConsent";
 import {Steps, useNewUserFlow} from "../services/NewUserFlow";
 import {Compliance} from "./Compliance";
 import {useIntl} from "react-intl";
+import {PaymentDetailsForm} from "../../payments/components/PaymentDetailsForm";
+import {ContainerSmall} from "../../../shared/components/ContainerSmall";
 
 
 export function NewUserStepper(){
@@ -28,10 +30,13 @@ export function NewUserStepper(){
                     );
                 })}
             </Stepper>
-            {flow.getActiveStepString() === Steps.REGISTER && <RegisterPage/>}
-            {flow.getActiveStepString() === Steps.PAYMENT_DETAILS && <PaymentDetailsPage/>}
-            {flow.getActiveStepString() === Steps.COMPLIANCE && <Compliance/>}
-            {flow.getActiveStepString() === Steps.OFFERS && <OfferConsent/>}
+
+            <ContainerSmall>
+                {flow.getActiveStepString() === Steps.REGISTER && <RegisterPage/>}
+                {flow.getActiveStepString() === Steps.PAYMENT_DETAILS && <PaymentDetailsForm/>}
+                {flow.getActiveStepString() === Steps.COMPLIANCE && <Compliance/>}
+                {flow.getActiveStepString() === Steps.OFFERS && <OfferConsent/>}
+            </ContainerSmall>
         </Box>
     );
 }

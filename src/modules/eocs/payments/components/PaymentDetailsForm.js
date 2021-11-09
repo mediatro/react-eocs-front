@@ -14,8 +14,10 @@ import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 import camelize from "camelize";
-import {PBox} from "../../../shared/components/PBox";
-
+import {SPaper} from "../../../shared/components/SPaper";
+import {TCardTitle} from "../../../shared/components/TCardTitle";
+import {MessageWarning} from "../../../shared/components/MessageWarning";
+import {ButtonSubmit} from "../../../shared/components/ButtonSubmit";
 
 export function PaymentDetailsForm(props){
 
@@ -83,78 +85,110 @@ export function PaymentDetailsForm(props){
     }
 
     return (
-        <PBox>
-            <Typography variant={'h4'}>
+        <SPaper>
+            <TCardTitle>
                 <FormattedMessage id={'payment.text.payment_detail.create'}/>
-            </Typography>
+            </TCardTitle>
+
+            {pmc.manager.isPaymentDetailsBlocked() &&
+                <>
+                    <MessageWarning>
+                        <FormattedMessage id={'payment.text.payment_details.blocked'}/>
+                    </MessageWarning>
+
+                    <MessageWarning>
+                        <FormattedMessage id={`payment.text.payment_details.blocked.${pmc.manager.isPaymentDetailsBlocked()}`}/>
+                    </MessageWarning>
+                </>
+            }
+
+            {pmc.manager.getAvailablePriorities().length === 1 && pmc.manager.getAvailablePriorities()[0] === Priority.SECONDARY &&
+                <MessageWarning>
+                    <FormattedMessage id={'payment.text.payment_details.secondary_only'}/>
+                </MessageWarning>
+            }
 
             <Form onSubmit={onSubmit}
-                  render={({ handleSubmit, values }) => (
-                      <form onSubmit={handleSubmit}>
+                render={({ handleSubmit, values }) => (
+                    <form onSubmit={handleSubmit}>
 
-                          {pmc.manager.getAvailablePriorities().length > 1 && <Select name="priority"
-                                  label={intl.formatMessage({id: "payment.field.payment_details.priority"})}
-                                  required={true}
-                                  value={priority}
-                                  onChange={(e)=> {setPriority(e.target.value)}}
-                                  data={Object.keys(Priority).map(k => ({
-                                      label: intl.formatMessage({id: `payment.field.payment_details.priority.${Priority[k]}`}),
-                                      value: Priority[k]
-                                  }))}
-                          />}
+                        {pmc.manager.getAvailablePriorities().length > 1 &&
+                            <Box sx={{ mt: 1, mb: 1 }}>
+                                <Select name="priority"
+                                      label={intl.formatMessage({id: "payment.field.payment_details.priority"})}
+                                      required={true}
+                                      value={priority}
+                                      onChange={(e)=> {setPriority(e.target.value)}}
+                                      data={Object.keys(Priority).map(k => ({
+                                          label: intl.formatMessage({id: `payment.field.payment_details.priority.${Priority[k]}`}),
+                                          value: Priority[k]
+                                      }))}
+                                />
+                            </Box>
+                        }
 
-                          <Select name="method"
-                                  label={intl.formatMessage({id: "payment.field.method"})}
-                                  required={true}
-                                  value={selectedMethod}
-                                  onChange={(e)=> {setSelectedMethod(e.target.value)}}
-                                  data={getAvailableMethods().map(m => ({
-                                      label: intl.formatMessage({id: `payment.field.method.${m.codename}`}),
-                                      value: m
-                                  }))}
-                          />
+                        <Box sx={{ mt: 1, mb: 1 }}>
+                            <Select name="method"
+                                      label={intl.formatMessage({id: "payment.field.method"})}
+                                      required={true}
+                                      value={selectedMethod}
+                                      onChange={(e)=> {setSelectedMethod(e.target.value)}}
+                                      data={getAvailableMethods().map(m => ({
+                                          label: intl.formatMessage({id: `payment.field.method.${m.codename}`}),
+                                          value: m
+                                        }))}
+                            />
+                        </Box>
 
-                          {selectedMethod && <>
-                              <Select name="currency"
+                        {selectedMethod && <>
+                            <Box sx={{ mt: 1, mb: 1 }}>
+                                <Select name="currency"
                                       label={intl.formatMessage({id: "payment.field.currency"})}
                                       required={true}
                                       data={AvailableCurrencies[getCurrencyType()].map(v => ({
                                           label: v,
                                           value: v
                                       }))}
-                              />
+                                />
+                            </Box>
 
-                              {selectedMethod.codename === PaymentType.WIRE_TRANSFER && <>
-                                  <TextField name="account_holder_name"
-                                             label={intl.formatMessage({id: "payment.field.wire.account_holder_name"})}
-                                             required={true}
-                                  />
-                                  <CountrySelect name="country"
+                            {selectedMethod.codename === PaymentType.WIRE_TRANSFER && <>
+                                <TextField name="account_holder_name"
+                                         label={intl.formatMessage({id: "payment.field.wire.account_holder_name"})}
+                                         required={true}
+                                         sx={{ mt: 1, mb: 1 }}
+                                />
+                                <Box sx={{ mt: 1, mb: 1 }}>
+                                    <CountrySelect name="country"
                                                  label="form.country"
                                                  required={true}
-                                  />
+                                    />
+                                </Box>
+                                <TextField name="beneficiary_bank_name"
+                                         label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_name"})}
+                                         required={true}
+                                         sx={{ mt: 1, mb: 1 }}
+                                />
+                                <TextField name="beneficiary_bank_address"
+                                         label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_address"})}
+                                         required={true}
+                                         sx={{ mt: 1, mb: 1 }}
+                                />
+                                <TextField name="beneficiary_bank_account_iban"
+                                         label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_account_iban"})}
+                                         required={true}
+                                         sx={{ mt: 1, mb: 1 }}
+                                />
+                                <TextField name="beneficiary_bank_swift"
+                                         label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_swift"})}
+                                         required={true}
+                                         sx={{ mt: 1, mb: 1 }}
+                                />
+                            </>}
 
-                                  <TextField name="beneficiary_bank_name"
-                                             label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_name"})}
-                                             required={true}
-                                  />
-                                  <TextField name="beneficiary_bank_address"
-                                             label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_address"})}
-                                             required={true}
-                                  />
-                                  <TextField name="beneficiary_bank_account_iban"
-                                             label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_account_iban"})}
-                                             required={true}
-                                  />
-                                  <TextField name="beneficiary_bank_swift"
-                                             label={intl.formatMessage({id: "payment.field.wire.beneficiary_bank_swift"})}
-                                             required={true}
-                                  />
-
-                              </>}
-
-                              {selectedMethod.codename === PaymentType.PSP && <>
-                                  <Select name="platform"
+                            {selectedMethod.codename === PaymentType.PSP && <>
+                                <Box sx={{ mt: 1, mb: 1 }}>
+                                    <Select name="platform"
                                           label={intl.formatMessage({id: "payment.field.psp.platform"})}
                                           required={true}
                                           value={selectedPlatform}
@@ -163,56 +197,58 @@ export function PaymentDetailsForm(props){
                                               label: p.displayName,
                                               value: p
                                           }))}
-                                  />
+                                    />
+                                </Box>
+                                <TextField name="account_holder_name"
+                                     label={intl.formatMessage({id: "payment.field.psp.account_holder_name"})}
+                                     required={true}
+                                     sx={{ mt: 1, mb: 1 }}
+                                />
+                                <TextField name="wallet_number_email"
+                                     label={intl.formatMessage({id: "payment.field.psp.wallet_number_email"})}
+                                     required={true}
+                                     sx={{ mt: 1, mb: 1 }}
+                                />
+                            </>}
 
-                                  <TextField name="account_holder_name"
-                                             label={intl.formatMessage({id: "payment.field.psp.account_holder_name"})}
-                                             required={true}
-                                  />
-                                  <TextField name="wallet_number_email"
-                                             label={intl.formatMessage({id: "payment.field.psp.wallet_number_email"})}
-                                             required={true}
-                                  />
-                              </>}
+                            {selectedMethod.codename === PaymentType.OCT && <>
+                              <TextField name="card_holder_name"
+                                         label={intl.formatMessage({id: "payment.field.oct.card_holder_name"})}
+                                         required={true}
+                                         sx={{ mt: 1, mb: 1 }}
+                              />
+                              <TextField name="card_number"
+                                         label={intl.formatMessage({id: "payment.field.oct.card_number"})}
+                                         required={true}
+                                         sx={{ mt: 1, mb: 1 }}
+                              />
+                              <TextField name="card_expiry"
+                                         label={intl.formatMessage({id: "payment.field.oct.card_expiry"})}
+                                         required={true}
+                                         sx={{ mt: 1, mb: 1 }}
+                              />
+                            </>}
 
-                              {selectedMethod.codename === PaymentType.OCT && <>
-                                  <TextField name="card_holder_name"
-                                             label={intl.formatMessage({id: "payment.field.oct.card_holder_name"})}
-                                             required={true}
-                                  />
-                                  <TextField name="card_number"
-                                             label={intl.formatMessage({id: "payment.field.oct.card_number"})}
-                                             required={true}
-                                  />
-                                  <TextField name="card_expiry"
-                                             label={intl.formatMessage({id: "payment.field.oct.card_expiry"})}
-                                             required={true}
-                                  />
-                              </>}
+                            {selectedMethod.codename === PaymentType.CRYPTO && <>
+                              <TextField name="platform"
+                                         label={intl.formatMessage({id: "payment.field.crypto.platform"})}
+                                         required={true}
+                                         sx={{ mt: 1, mb: 1 }}
+                              />
+                              <TextField name="wallet_number"
+                                         label={intl.formatMessage({id: "payment.field.crypto.wallet_number"})}
+                                         required={true}
+                                         sx={{ mt: 1, mb: 1 }}
+                              />
+                            </>}
+                        </>}
 
-                              {selectedMethod.codename === PaymentType.CRYPTO && <>
-                                  <TextField name="platform"
-                                             label={intl.formatMessage({id: "payment.field.crypto.platform"})}
-                                             required={true}
-                                  />
-                                  <TextField name="wallet_number"
-                                             label={intl.formatMessage({id: "payment.field.crypto.wallet_number"})}
-                                             required={true}
-                                  />
-                              </>}
-                          </>}
-
-                          <Box mt={2}>
-                              <Button type="submit"
-                                      variant="contained"
-                                      disabled={fic.loading}
-                              >
-                                  <FormattedMessage id={'payment.action.details_create'}/>
-                              </Button>
-                          </Box>
-                      </form>
+                        <ButtonSubmit>
+                            <FormattedMessage id={'payment.action.details_create'}/>
+                        </ButtonSubmit>
+                    </form>
                   )}
             />
-        </PBox>
+        </SPaper>
     );
 }

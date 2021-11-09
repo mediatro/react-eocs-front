@@ -14,6 +14,11 @@ import {AuthContext} from "../../../shared/services/AuthProvider";
 import {FetchInterceptorContext} from "../../../shared/services/FetchInterceptorProvider";
 import { switchMap } from 'rxjs/operators';
 import {useLocation} from "react-router-dom";
+import {ContainerSmall} from "../../../shared/components/ContainerSmall";
+import {TH1} from "../../../shared/components/TH1";
+import {TSubtitle1} from "../../../shared/components/TSubtitle1";
+import {ButtonSubmit} from "../../../shared/components/ButtonSubmit";
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 const DialogTypes = {
     CONFIDENTIALITY: 'confidentiality',
@@ -74,93 +79,116 @@ export function RegisterPage(props){
     };
 
     return (
-        <Box sx={{width: 400}}>
+        <ContainerSmall>
+            <TH1>
+                <FormattedMessage id={'page.register'}/>
+            </TH1>
+
             <Form
                 onSubmit={onSubmit}
                 render={({ handleSubmit, values }) => (
-                    <form onSubmit={handleSubmit}>
+                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, mb: 1 }}>
                         {!user ? <>
-                            <Typography><FormattedMessage id={'auth.text.register.request_prereg'}/></Typography>
+
+                            <TSubtitle1>
+                                <FormattedMessage id={'auth.text.register.request_prereg'}/>
+                            </TSubtitle1>
 
                             <TextField name="erp_id"
                                        label={intl.formatMessage( {id: "auth.field.user.erp_id"})}
                                        required={true}
                                        value={erpId}
                                        onChange={(e) => setErpId(e.target.value)}
+                                       sx={{ mt: 1, mb: 1 }}
                             />
 
-                            <Box mt={2}>
-                                <Button type="submit"
-                                        disabled={fic.loading}
-                                >
-                                    <FormattedMessage id={'auth.action.register.check_prereg'}/>
-                                </Button>
-                            </Box>
+                            <ButtonSubmit>
+                                <FormattedMessage id={'auth.action.register.check_prereg'}/>
+                            </ButtonSubmit>
+
                         </> : <>
+
                             <TextField  type={'email'}
                                         name="email"
                                         label={intl.formatMessage( {id: "auth.field.user.email"})}
                                         required={true}
                                         value={user.email}
                                         onChange={(e)=> {setUser({...user, email: e.target.value})}}
+                                        sx={{ mt: 1, mb: 1 }}
                             />
                             <TextField type={"password"}
                                        name="password"
                                        label={intl.formatMessage( {id: "auth.field.user.password"})}
                                        required={true}
+                                       sx={{ mt: 1, mb: 1 }}
                             />
                             <TextField type={"password"}
                                        name="password_repeat"
                                        label={intl.formatMessage( {id: "auth.field.user.password_repeat"})}
                                        required={true}
+                                       sx={{ mt: 1, mb: 1 }}
                             />
-
                             <Field name="phone">
                                 { props => <MuiPhoneNumber defaultCountry={'us'}
                                                            name="phone"
                                                            label={intl.formatMessage( {id: "auth.field.user.phone"})}
                                                            value={user.phone}
                                                            onChange={(e)=> {setUser({...user, phone: e})}}
+                                                           variant={'outlined'}
+                                                           fullWidth={true}
+                                                           sx={{ mt: 1, mb: 1 }}
                                 /> }
                             </Field>
-                            <CountrySelect name="country"
-                                           label={intl.formatMessage( {id: "location.field.country"})}
-                                           required={true}
-                            />
-                            <Select name="user_type"
-                                    label={intl.formatMessage( {id: "auth.field.user.user_type"})}
-                                    required={true}
-                                    value={userType}
-                                    onChange={(e)=> {setUserType(e.target.value)}}
-                                    data={Object.keys(UserType).map(k => ({
-                                        label: intl.formatMessage({id: `auth.field.user.user_type.${UserType[k]}`}),
-                                        value: UserType[k]
-                                    }))}
-                            />
+                            <Box sx={{ mt: 1, mb: 1 }}>
+                                <CountrySelect name="country"
+                                               label={intl.formatMessage( {id: "location.field.country"})}
+                                               required={true}
+                                />
+                            </Box>
+
+                            <Box sx={{ mt: 4, mb: 3 }}>
+                                <Select name="user_type"
+                                        label={intl.formatMessage( {id: "auth.field.user.user_type"})}
+                                        required={true}
+                                        value={userType}
+                                        onChange={(e)=> {setUserType(e.target.value)}}
+                                        data={Object.keys(UserType).map(k => ({
+                                            label: intl.formatMessage({id: `auth.field.user.user_type.${UserType[k]}`}),
+                                            value: UserType[k]
+                                        }))}
+                                />
+                            </Box>
 
                             {userType === UserType.PRIVATE_INDIVIDUAL && <>
                                 <TextField name="first_name"
                                            label={intl.formatMessage( {id: "auth.field.user.first_name"})}
                                            required={true}
+                                           sx={{ mt: 1, mb: 1 }}
                                 />
                                 <TextField name="last_name"
                                            label={intl.formatMessage( {id: "auth.field.user.last_name"})}
                                            required={true}
+                                           sx={{ mt: 1, mb: 1 }}
                                 />
-                                <KeyboardDatePicker name="birthday"
-                                                    label={intl.formatMessage( {id: "auth.field.user.birthday"})}
-                                                    required={true}
-                                                    openTo={"year"}
-                                                    format={"dd.MM.yyyy"}
-                                                    dateFunsUtils={DateFnsUtils}
-                                />
+                                <Box sx={{ mt: 1, mb: 1 }}>
+                                    <KeyboardDatePicker name="birthday"
+                                                        label={intl.formatMessage( {id: "auth.field.user.birthday"})}
+                                                        required={true}
+                                                        openTo={"year"}
+                                                        format={"dd.MM.yyyy"}
+                                                        dateFunsUtils={DateFnsUtils}
+                                                        sx={{ mt: 2 }}
+                                    />
+                                </Box>
                                 <TextField name="city"
                                            label={intl.formatMessage( {id: "location.field.city"})}
                                            required={true}
+                                           sx={{ mt: 1, mb: 1 }}
                                 />
                                 <TextField name="address"
                                            label={intl.formatMessage( {id: "auth.field.user.address"})}
                                            required={true}
+                                           sx={{ mt: 1, mb: 1 }}
                                 />
                             </>}
 
@@ -168,14 +196,17 @@ export function RegisterPage(props){
                                 <TextField name="company_reg_number"
                                            label={intl.formatMessage( {id: "auth.field.user.company_reg_number"})}
                                            required={true}
+                                           sx={{ mt: 1, mb: 1 }}
                                 />
                                 <TextField name="legal_representative_name"
                                            label={intl.formatMessage( {id: "auth.field.user.legal_representative_name"})}
                                            required={true}
+                                           sx={{ mt: 1, mb: 1 }}
                                 />
                                 <TextField name="legal_address"
                                            label={intl.formatMessage( {id: "auth.field.user.legal_address"})}
                                            required={true}
+                                           sx={{ mt: 1, mb: 1 }}
                                 />
                             </>}
 
@@ -200,26 +231,30 @@ export function RegisterPage(props){
 
                             <Field name="image">
                                 {({ input: { value, onChange, ...input } }) => (
-                                    <input
-                                        {...input}
-                                        type="file"
-                                        name={"image"}
-                                        required={"true"}
-                                        onChange={({ target }) => onChange(target.files)} // instead of the default target.value
-                                    />
+                                    <label htmlFor="image">
+                                        <input
+                                            {...input}
+                                            accept="image/*"
+                                            type="file"
+                                            name={"image"}
+                                            id={"image"}
+                                            required={"true"}
+                                            onChange={({ target }) => onChange(target.files)} // instead of the default target.value
+                                            style={{display: 'none'}}
+                                        />
+                                        <Button component={'span'}
+                                                startIcon={<FileUploadIcon />}>
+                                            <FormattedMessage id={'auth.field.user.image'}/>
+                                        </Button>
+                                    </label>
                                 )}
                              </Field>
 
-                            <Box mt={2}>
-                                <Button type="submit"
-                                        variant="contained"
-                                        disabled={fic.loading}
-                                >
-                                    <FormattedMessage id={'auth.action.register.submit'}/>
-                                </Button>
-                            </Box>
+                            <ButtonSubmit>
+                                <FormattedMessage id={'auth.action.register.submit'}/>
+                            </ButtonSubmit>
                         </>}
-                    </form>
+                    </Box>
                 )}
             />
 
@@ -229,7 +264,7 @@ export function RegisterPage(props){
                          handleClose={handleAgreeDialogClose(DialogTypes.CONFIDENTIALITY)}
             />
 
-        </Box>
+        </ContainerSmall>
     );
 }
 
