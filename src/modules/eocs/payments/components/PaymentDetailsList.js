@@ -6,6 +6,7 @@ import {SPaper} from "../../../shared/components/SPaper";
 import LoopIcon from '@mui/icons-material/Loop';
 import {PaymentManagerContext} from "../services/PaymentProvider";
 import {TCardTitle} from "../../../shared/components/TCardTitle";
+import {TStatus} from "../../../shared/components/TStatus";
 
 export function PaymentDetailsList(){
 
@@ -22,9 +23,10 @@ export function PaymentDetailsList(){
     const getListAction = (detail) => (
         authc.manager.getUser().activePaymentDetail && authc.manager.getUser().activePaymentDetail['@id'] === detail['@id']
             ?
-                <Typography color={'green'}>
+
+                <TStatus status={detail.status}>
                     <FormattedMessage id={'payment.field.payment_detail.active'}/>
-                </Typography>
+                </TStatus>
             :
                 detail.status === 'verified'
                     ?
@@ -32,7 +34,9 @@ export function PaymentDetailsList(){
                             <LoopIcon/>
                         </IconButton>
                     :
-                        null
+                        <TStatus status={detail.status}>
+                            <FormattedMessage id={`payment.field.payment_detail.status.${detail.status}`}/>
+                        </TStatus>
     );
 
     return (
@@ -45,7 +49,7 @@ export function PaymentDetailsList(){
                 {authc.manager.getUser().paymentDetails.slice(0).reverse().map((detail, i) => (
                     <ListItem secondaryAction={getListAction(detail)}>
                         <ListItemText>
-                            <Typography>{detail["@id"]} - {detail.displayString} - {detail.status}</Typography>
+                            <Typography>{detail.displayString}</Typography>
                         </ListItemText>
                     </ListItem>
                 ))}

@@ -43,7 +43,7 @@ export function PaymentDetailsForm(props){
         let nv = {...camelize(formValue), ...{
             user: authc.manager.getUser()['@id'],
             method: selectedMethod['@id'],
-            platform: selectedPlatform ? selectedPlatform['@id'] : null,
+            platform: selectedPlatform ? selectedPlatform['@id'] : formValue.platform,
             status: priority === Priority.PRIMARY && !pmc.manager.hasPendingDetails() ? 'new-primary' : 'new',
         }};
 

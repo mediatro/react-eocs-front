@@ -32,6 +32,8 @@ import {TSubtitle1} from "../../../shared/components/TSubtitle1";
 import {TCardTitle} from "../../../shared/components/TCardTitle";
 import {MessageWarning} from "../../../shared/components/MessageWarning";
 import {ContainerMid} from "../../../shared/components/ContainerMid";
+import {TStatus} from "../../../shared/components/TStatus";
+import {TKeyValue} from "../../../shared/components/TKeyValue";
 
 
 export function HomePage(){
@@ -42,11 +44,7 @@ export function HomePage(){
 
     const flow = useNewUserFlow();
 
-
-
-
     return (
-
             !authc.manager.getUser() ? <>
                 <ContainerSmall>
                     <TH1>
@@ -64,9 +62,8 @@ export function HomePage(){
             </> : <>
 
                 {authc.manager.getUser().id && (
-                    !flow.isEverythingComplete()
+                    flow.active || !flow.isEverythingComplete()
                         ? <NewUserStepper/>
-
                         :
                             <ContainerMid>
 
@@ -76,7 +73,7 @@ export function HomePage(){
                                     </SPaper>
                                 </Grid>
 
-                                <Grid item xs>
+                                <Grid item xs md={6}>
 
                                     {authc.manager.getUser().activePaymentDetail && <SPaper>
                                         <TCardTitle>
@@ -88,10 +85,19 @@ export function HomePage(){
                                                 <FormattedMessage id={'home.text.wait_for_payment_details_verification'}/>
                                             </MessageWarning>
                                         }
+                                        <Grid container>
+                                            <Grid item>
+                                                <Typography>
+                                                    {authc.manager.getUser().activePaymentDetail.displayString}
+                                                </Typography>
+                                            </Grid>
 
-                                        <Typography>
-                                            <Typography>{authc.manager.getUser().activePaymentDetail["@id"]} - {authc.manager.getUser().activePaymentDetail.displayString} - {authc.manager.getUser().activePaymentDetail.status}</Typography>
-                                        </Typography>
+                                            <Grid item>
+                                                <TStatus status={authc.manager.getUser().activePaymentDetail.status}>
+                                                    <FormattedMessage id={`payment.field.payment_detail.status.${authc.manager.getUser().activePaymentDetail.status}`}/>
+                                                </TStatus>
+                                            </Grid>
+                                        </Grid>
                                     </SPaper>}
                                 </Grid>
 

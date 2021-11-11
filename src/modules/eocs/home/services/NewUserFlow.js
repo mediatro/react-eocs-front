@@ -1,4 +1,4 @@
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {AuthContext} from "../../../shared/services/AuthProvider";
 import {UserManagerContext} from "../../auth/services/UserManagerProvider";
 import {PaymentManagerContext} from "../../payments/services/PaymentProvider";
@@ -15,6 +15,8 @@ export class NewUserFlow {
     authc = null;
     umc = null;
     pmc = null;
+
+    active = false;
 
     getUser(){
         return this.authc.manager.getUser();
@@ -60,6 +62,9 @@ export class NewUserFlow {
                 ret+= 1;
                 if(this.isComplianceComplete()){
                     ret+= 1;
+                    if(this.isOffersComplete()){
+                        ret+= 1;
+                    }
                 }
             }
         }
@@ -71,7 +76,7 @@ export class NewUserFlow {
     }
 
     isEverythingComplete(){
-        return this.getActiveStepNumber() === Object.keys(Steps).length - 1 && this.isOffersComplete();
+        return this.getActiveStepNumber() === Object.keys(Steps).length;
     }
 
 }
@@ -83,6 +88,10 @@ export function useNewUserFlow(){
     flow.authc = useContext(AuthContext);
     flow.umc = useContext(UserManagerContext);
     flow.pmc = useContext(PaymentManagerContext);
+
+    useEffect(() => {
+        flow.active = !flow.isEverythingComplete();
+    }, [])
 
     return flow;
 

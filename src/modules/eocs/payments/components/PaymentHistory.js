@@ -61,7 +61,6 @@ export function PaymentHistory(){
                                     <TableCell><FormattedMessage id={'payment.field.date'}/></TableCell>
                                     <TableCell align="right"><FormattedMessage id={'payment.field.amount'}/></TableCell>
                                     <TableCell align="right"><FormattedMessage id={'payment.field.currency'}/></TableCell>
-                                    <TableCell align="right"><FormattedMessage id={'payment.field.method'}/></TableCell>
                                     <TableCell align="right"><FormattedMessage id={'payment.field.detail'}/></TableCell>
                                     <TableCell align="right"><FormattedMessage id={'payment.action.invoice_request'}/></TableCell>
                                 </TableRow>
@@ -73,7 +72,6 @@ export function PaymentHistory(){
                                                    scope="row">{new Date(row.updatedAt).toLocaleDateString()}</TableCell>
                                         <TableCell align="right">{row.amount}</TableCell>
                                         <TableCell align="right">{row.detail.currency}</TableCell>
-                                        <TableCell align="right">{row.detail.method}</TableCell>
                                         <TableCell align="right">{row.detail.displayString}</TableCell>
                                         <TableCell align="right">
                                             <IconButton color={'primary'} onClick={() => handleRequestInvoice(row)}>

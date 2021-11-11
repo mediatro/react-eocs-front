@@ -50,7 +50,9 @@ export function SideNav(props){
                               component={Link} to={route.path}
                               selected={isActive(route.path)}
                     >
-                        <ListItemIcon></ListItemIcon>
+                        <ListItemIcon>
+                            {route.icon && <route.icon color={'primary'}/>}
+                        </ListItemIcon>
                         <ListItemText><FormattedMessage id={route.message}/></ListItemText>
                     </ListItem>
             ))}

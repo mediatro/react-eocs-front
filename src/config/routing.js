@@ -7,11 +7,19 @@ import {HomePage} from "../modules/eocs/home/components/HomePage";
 import {PasswordResetPage} from "../modules/eocs/auth/components/PasswordResetPage";
 import {PaymentRequestConfirmation} from "../modules/eocs/payments/components/PaymentRequestConfirmation";
 
+import HomeIcon from '@mui/icons-material/Home'; //хоме
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'; //пеймент дитейлс
+import LockOpenIcon from '@mui/icons-material/LockOpen'; //sign in
+import LockIcon from '@mui/icons-material/Lock'; //sign out
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import PaymentsIcon from '@mui/icons-material/Payments'; //пеймент реквест
+
 export const routes = [
     {
         path: '/',
         message: 'page.home',
         component: HomePage,
+        icon: HomeIcon,
     },
     {
         path: '/payment-request-confirmation',
@@ -25,12 +33,14 @@ export const routes = [
         message: 'page.payment_details',
         component: PaymentDetailsPage,
         conditions: {authed: true, initiated: true},
+        icon: AccountBalanceWalletIcon,
     },
     {
         path: '/payment-request',
         message: 'page.payment_request',
         component: PaymentRequestPage,
         conditions: {authed: true, verified: true},
+        icon: PaymentsIcon,
     },
 
     {
@@ -38,12 +48,14 @@ export const routes = [
         message: 'page.register',
         component: RegisterPage,
         conditions: {authed: false},
+        icon: AppRegistrationIcon,
     },
     {
         path: '/login',
         message: 'page.login',
         component: LoginPage,
         conditions: {authed: false},
+        icon: LockOpenIcon,
     },
     {
         path: '/password-reset',
@@ -57,5 +69,6 @@ export const routes = [
         message: 'page.logout',
         component: LogoutPage,
         conditions: {authed: true},
+        icon: LockIcon,
     },
 ];
