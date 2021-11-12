@@ -79,9 +79,9 @@ export function HomePage(){
                                 <Grid container item xs md={6} direction={'column'}
                                       spacing={2}
                                       alignItems={'stretch'}
-                                      justifyContent={'start'}
+                                      justifyContent={'stretch'}
                                 >
-                                    <Grid item sx={{height: 119}}>{/*TODO: resolve*/}
+                                    <Grid item>
                                         {authc.manager.getUser().activePaymentDetail &&
                                             <SPaper>
                                                 <TCardTitle>

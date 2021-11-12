@@ -52,7 +52,13 @@ export function NewUserStepper(props){
                     </Grid>
                 }
                 {flow.getActiveStepString() === Steps.COMPLIANCE && <Compliance/>}
-                {flow.getActiveStepString() === Steps.OFFERS && !flow.isOffersComplete() && <OfferConsent/>}
+                {flow.getActiveStepString() === Steps.OFFERS && !flow.isOffersComplete() &&
+                    <Grid container justifyContent={'center'}>
+                        <Grid item xs sm={9}>
+                            <OfferConsent/>
+                        </Grid>
+                    </Grid>
+                }
                 {flow.isEverythingComplete() && flow.active &&
                     <>
                         <MessageSuccess>

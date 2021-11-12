@@ -160,7 +160,7 @@ export function PaymentDetailsForm(props){
                                 />
                                 <Box sx={{ mt: 1, mb: 1 }}>
                                     <CountrySelect name="country"
-                                                 label="form.country"
+                                                 label={intl.formatMessage({id: "form.country"})}
                                                  required={true}
                                     />
                                 </Box>
