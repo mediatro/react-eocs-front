@@ -19,6 +19,7 @@ import MuiPhoneNumber from "material-ui-phone-number";
 import {CountrySelect} from "../../../shared/components/CountrySelect";
 import DateFnsUtils from "@date-io/date-fns";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import {TKeyValueGrid} from "../../../shared/components/TKeyValueGrid";
 
 
 const DialogTypes = {
@@ -188,15 +189,16 @@ export function RegisterForm(props){
                                         }}
                             />
 
-                            <Button onClick={() => handleAgreeDialogOpen(DialogTypes.CONFIDENTIALITY)}>{intl.formatMessage( {id: "auth.action.register.consent_confidentiality.open"})}</Button>
-
-                            <Checkboxes name="consent_confidentiality"
-                                        required={true}
-                                        data={{
-                                            label: intl.formatMessage( {id: "auth.form.register.consent_confidentiality"}),
-                                            value: checked[DialogTypes.CONFIDENTIALITY]
-                                        }}
-                                        checked={checked[DialogTypes.CONFIDENTIALITY] === true}
+                            <TKeyValueGrid
+                                tkey={<Button onClick={() => handleAgreeDialogOpen(DialogTypes.CONFIDENTIALITY)}>{intl.formatMessage( {id: "auth.action.register.consent_confidentiality.open"})}</Button>}
+                                value={<Checkboxes name="consent_confidentiality"
+                                                   required={true}
+                                                   data={{
+                                                       label: intl.formatMessage( {id: "auth.form.register.consent_confidentiality"}),
+                                                       value: checked[DialogTypes.CONFIDENTIALITY]
+                                                   }}
+                                                   checked={checked[DialogTypes.CONFIDENTIALITY] === true}
+                                />}
                             />
 
                             <Field name="image">
