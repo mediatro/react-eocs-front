@@ -190,8 +190,7 @@ export function RegisterForm(props){
                             />
 
                             <TKeyValueGrid
-                                tkey={<Button onClick={() => handleAgreeDialogOpen(DialogTypes.CONFIDENTIALITY)}>{intl.formatMessage( {id: "auth.action.register.consent_confidentiality.open"})}</Button>}
-                                value={<Checkboxes name="consent_confidentiality"
+                                tkey={<Checkboxes name="consent_confidentiality"
                                                    required={true}
                                                    data={{
                                                        label: intl.formatMessage( {id: "auth.form.register.consent_confidentiality"}),
@@ -199,6 +198,7 @@ export function RegisterForm(props){
                                                    }}
                                                    checked={checked[DialogTypes.CONFIDENTIALITY] === true}
                                 />}
+                                value={<Button onClick={() => handleAgreeDialogOpen(DialogTypes.CONFIDENTIALITY)}>{intl.formatMessage( {id: "auth.action.register.consent_confidentiality.open"})}</Button>}
                             />
 
                             <Field name="image">
