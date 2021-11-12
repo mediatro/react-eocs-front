@@ -18,6 +18,7 @@ import {TH1} from "../../../shared/components/TH1";
 import {MessageDefault} from "../../../shared/components/MessageDefault";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import {TCardTitle} from "../../../shared/components/TCardTitle";
+import {TStatus} from "../../../shared/components/TStatus";
 
 export function ActivePaymentRequests(){
 
@@ -38,7 +39,6 @@ export function ActivePaymentRequests(){
                                     <TableCell><FormattedMessage id={'payment.field.date'}/></TableCell>
                                     <TableCell align="right"><FormattedMessage id={'payment.field.site'}/></TableCell>
                                     <TableCell align="right"><FormattedMessage id={'payment.field.amount'}/></TableCell>
-                                    <TableCell align="right"><FormattedMessage id={'payment.field.method'}/></TableCell>
                                     <TableCell align="right"><FormattedMessage id={'payment.field.detail'}/></TableCell>
                                     <TableCell align="right"><FormattedMessage id={'payment.field.status'}/></TableCell>
                                 </TableRow>
@@ -50,9 +50,12 @@ export function ActivePaymentRequests(){
                                                    scope="row">{new Date(row.updatedAt).toLocaleDateString()}</TableCell>
                                         <TableCell align="right">{row.siteHistoryRecord.site.name}</TableCell>
                                         <TableCell align="right">{row.amount}</TableCell>
-                                        <TableCell align="right">{row.detail.method}</TableCell>
                                         <TableCell align="right">{row.detail.displayString}</TableCell>
-                                        <TableCell align="right">{row.status}</TableCell>
+                                        <TableCell align="right">
+                                            <TStatus status={row.status}>
+                                                <FormattedMessage id={`payment.field.payment_request.status.${row.status}`}/>
+                                            </TStatus>
+                                        </TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>

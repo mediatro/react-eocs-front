@@ -54,5 +54,66 @@
   "payment.text.payment_request.blocked.request_too_soon": {
     "en": "You can't create a new payout until the previous one has been processed",
     "ru": "Нельзя создать новый запрос на выплату, пока не обработан текущий"
+  },
+  "auth.action.profile.edit": {
+    "en": "edit profile",
+    "ru": "редактировать"
+  },
+
+  "payment.field.payment_detail.display_string":{
+    "en": "name",
+    "ru": "имя"
+  },
+  "payment.field.payment_detail.status":{
+    "en": "status",
+    "ru": "статус"
+  },
+  "payment.field.payment_detail.status.new":{
+    "en": "new",
+    "ru": "новые"
+  },
+  "payment.field.payment_detail.status.verified":{
+    "en": "verified",
+    "ru": "подтверждены"
+  },
+  "payment.field.payment_detail.status.tochange":{
+    "en": "to change",
+    "ru": "более недоступны"
+  },
+  "payment.field.payment_detail.status.rejected":{
+    "en": "rejected",
+    "ru": "отклонены"
+  },
+
+  "payment.field.payment_request.status.new":{
+    "en": "new",
+    "ru": "новый"
+  },
+  "payment.field.payment_request.status.verified":{
+    "en": "verified",
+    "ru": "подтвержден"
+  },
+  "payment.field.payment_request.status.rejected":{
+    "en": "rejected",
+    "ru": "отклонен"
+  },
+
+  "home.text.stepper.compliance":{
+    "en": "Compliance",
+    "ru": "Подтверждение" 
+  },
+  "home.text.stepper.offers":{
+    "en": "Offers",
+    "ru": "Подписание договора" 
+  },
+  "home.text.flow.complete":{
+    "en": "Congratulations, you can start working now",
+    "ru": "Поздравляем, теперь вы можете начать зарабатывать" 
+  },
+  "form.country":{
+    "en": "Country",
+    "ru": "Страна" 
   }
+
+
 }

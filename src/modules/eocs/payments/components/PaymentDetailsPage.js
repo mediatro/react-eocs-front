@@ -36,12 +36,14 @@ export function PaymentDetailsPage(){
 
     return (
         <ContainerMid>
+
+
             <Grid item xs md={6}>
-                {authc.manager.getUser().paymentDetails && <PaymentDetailsList/>}
+                <PaymentDetailsForm/>
             </Grid>
 
-            <Grid item xs>
-                <PaymentDetailsForm/>
+            <Grid item xs md={12}>
+                {authc.manager.getUser().paymentDetails && <PaymentDetailsList/>}
             </Grid>
         </ContainerMid>
     );

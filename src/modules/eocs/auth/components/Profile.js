@@ -15,7 +15,9 @@ import {ButtonSubmit} from "../../../shared/components/ButtonSubmit";
 import {TCardTitle} from "../../../shared/components/TCardTitle";
 import {ContainerSmall} from "../../../shared/components/ContainerSmall";
 import {ButtonAction} from "../../../shared/components/ButtonAction";
-import {TKeyValue} from "../../../shared/components/TKeyValue";
+import {TKeyValueInline} from "../../../shared/components/TKeyValueInline";
+import {TStatus} from "../../../shared/components/TStatus";
+import {TKeyValueGrid} from "../../../shared/components/TKeyValueGrid";
 
 
 export function Profile(){
@@ -63,20 +65,21 @@ export function Profile(){
 
             {!editing
                 ? <>
-                    <TKeyValue
+
+                    <TKeyValueGrid
                         tkey={<FormattedMessage id={'auth.field.user.erp_id'}/>}
                         value={authc.manager.getUser().erpId}
                     />
 
                     {authc.manager.getUser().userType === UserType.PRIVATE_INDIVIDUAL &&
-                        <TKeyValue
+                        <TKeyValueGrid
                             tkey={<FormattedMessage id={'auth.field.user.full_name'}/>}
                             value={<>{authc.manager.getUser().firstName} {authc.manager.getUser().lastName}</>}
                         />
                     }
 
                     <ButtonAction onClick={toggleEditing}>
-                        {'auth.action.profile.edit'}
+                        <FormattedMessage id={'auth.action.profile.edit'}/>
                     </ButtonAction>
 
                 </> :

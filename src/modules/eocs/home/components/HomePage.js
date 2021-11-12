@@ -33,7 +33,9 @@ import {TCardTitle} from "../../../shared/components/TCardTitle";
 import {MessageWarning} from "../../../shared/components/MessageWarning";
 import {ContainerMid} from "../../../shared/components/ContainerMid";
 import {TStatus} from "../../../shared/components/TStatus";
-import {TKeyValue} from "../../../shared/components/TKeyValue";
+import {TKeyValueInline} from "../../../shared/components/TKeyValueInline";
+import {I18NContext} from "../../../shared/services/I18NProvider";
+import {TKeyValueGrid} from "../../../shared/components/TKeyValueGrid";
 
 
 export function HomePage(){
@@ -41,6 +43,7 @@ export function HomePage(){
     const authc = useContext(AuthContext);
     const umc = useContext(UserManagerContext);
     const pmc = useContext(PaymentManagerContext);
+    const i18nc = useContext(I18NContext);
 
     const flow = useNewUserFlow();
 
@@ -73,50 +76,47 @@ export function HomePage(){
                                     </SPaper>
                                 </Grid>
 
-                                <Grid item xs md={6}>
+                                <Grid container item xs md={6} direction={'column'}
+                                      spacing={2}
+                                      alignItems={'stretch'}
+                                      justifyContent={'start'}
+                                >
+                                    <Grid item sx={{height: 119}}>{/*TODO: resolve*/}
+                                        {authc.manager.getUser().activePaymentDetail &&
+                                            <SPaper>
+                                                <TCardTitle>
+                                                    <FormattedMessage id={'payment.field.payment_detail.active'}/>
+                                                </TCardTitle>
 
-                                    {authc.manager.getUser().activePaymentDetail && <SPaper>
-                                        <TCardTitle>
-                                            <FormattedMessage id={'payment.field.payment_detail.active'}/>
-                                        </TCardTitle>
+                                                {!pmc.manager.isPaymentRequestAvailable() &&
+                                                    <MessageWarning>
+                                                        <FormattedMessage id={'home.text.wait_for_payment_details_verification'}/>
+                                                    </MessageWarning>
+                                                }
 
-                                        {!pmc.manager.isPaymentRequestAvailable() &&
-                                            <MessageWarning>
-                                                <FormattedMessage id={'home.text.wait_for_payment_details_verification'}/>
-                                            </MessageWarning>
+                                                <TKeyValueGrid
+                                                    tkey={authc.manager.getUser().activePaymentDetail.displayString}
+                                                    value={
+                                                        <TStatus status={authc.manager.getUser().activePaymentDetail.status}>
+                                                            <FormattedMessage id={`payment.field.payment_detail.status.${authc.manager.getUser().activePaymentDetail.status}`}/>
+                                                        </TStatus>
+                                                    }
+                                                />
+                                            </SPaper>
                                         }
-                                        <Grid container>
-                                            <Grid item>
-                                                <Typography>
-                                                    {authc.manager.getUser().activePaymentDetail.displayString}
-                                                </Typography>
-                                            </Grid>
+                                    </Grid>
 
-                                            <Grid item>
-                                                <TStatus status={authc.manager.getUser().activePaymentDetail.status}>
-                                                    <FormattedMessage id={`payment.field.payment_detail.status.${authc.manager.getUser().activePaymentDetail.status}`}/>
-                                                </TStatus>
-                                            </Grid>
-                                        </Grid>
-                                    </SPaper>}
+                                    <Grid item>
+                                        {!umc.manager.isUserVerified()
+                                            ? <Compliance/>
+                                            : <OfferConsent/>
+                                        }
+                                    </Grid>
                                 </Grid>
 
-                                {!umc.manager.isUserVerified()
-                                    ?
-                                        <Compliance/>
-                                    :
-                                        <>
-                                            <Grid item xs md={6}>
-                                                <OfferConsent/>
-                                            </Grid>
-
-                                            <Grid item xs md={12}>
-                                                <PaymentHistory/>
-                                            </Grid>
-                                        </>
-                                }
-
-
+                                <Grid item xs md={12}>
+                                    <PaymentHistory/>
+                                </Grid>
                                 {/*{(!authc.manager.getUser().paymentDetails || authc.manager.getUser().paymentDetails.length < 1) &&
                             <PBox>
                                 <Typography>

@@ -16,7 +16,7 @@ import {ButtonSubmit} from "../../../shared/components/ButtonSubmit";
 import {MessageWarning} from "../../../shared/components/MessageWarning";
 import {ContainerMid} from "../../../shared/components/ContainerMid";
 import {TCardTitle} from "../../../shared/components/TCardTitle";
-import {TKeyValue} from "../../../shared/components/TKeyValue";
+import {TKeyValueInline} from "../../../shared/components/TKeyValueInline";
 
 export function PaymentRequestPage(){
 
@@ -65,7 +65,7 @@ export function PaymentRequestPage(){
                         </MessageWarning>
 
                     </> : <>
-                        <TKeyValue
+                        <TKeyValueInline
                             tkey={<><FormattedMessage id={'payment.field.payment_detail.limit'}/>(USD)</>}
                             value={getActivePaymentDetail() ? getActivePaymentDetail().payLimit : '0'}
                         />
