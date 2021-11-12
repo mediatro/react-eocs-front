@@ -62,6 +62,7 @@ export const routes = [
         message: 'page.password_reset',
         component: PasswordResetPage,
         conditions: {authed: false},
+        menu: false,
     },
 
     {
